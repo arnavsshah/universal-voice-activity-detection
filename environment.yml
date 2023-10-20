@@ -1,0 +1,22 @@
+# name: vad
+# channels:
+#   - defaults
+#   - conda-forge
+#   - pytorch
+# dependencies:
+#   - python==3.8.10
+#   - pytorch
+#   - torchaudio
+#   - cudatoolkit=10.2
+#   - pip
+#   - pip:
+#       - -r requirements.txt
+
+
+conda create --name vad python=3.8.10
+
+pip3 install torch torchaudio --index-url https://download.pytorch.org/whl/cu102
+
+pip3 -r requirements.txt
+
+wandb login
