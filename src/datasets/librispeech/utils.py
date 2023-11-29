@@ -17,7 +17,8 @@ def get_librispeech_cut(
     feats_dir: Optional[Pathlike] = None,
     batch_duration: int = 600,
     phase: Optional[str] = 'train',
-    prepare_dataset: Optional[bool] = False
+    prepare_dataset: Optional[bool] = False,
+    get_cuts: Optional[bool] = True
 ) -> lhotse.CutSet:
     
     assert cut_set_path or audio_dir, f'One of "cut_set_path" or "audio_dir" must have a valid value. \
@@ -39,7 +40,8 @@ def get_librispeech_cut(
             feats_dir,
             batch_duration,
             phase,
-            prepare_dataset
+            prepare_dataset,
+            get_cuts
         )
 
 def load_librispeech_cut(cut_set_path: Pathlike) -> lhotse.CutSet:
@@ -52,7 +54,8 @@ def create_librispeech_cut(
     feats_dir: Optional[Pathlike] = None,
     batch_duration: int = 600,
     phase: Optional[str] = 'train',
-    prepare_dataset: Optional[bool] = False
+    prepare_dataset: Optional[bool] = False,
+    get_cuts: Optional[bool] = True
 ) -> lhotse.CutSet:
 
     hrs = 360
@@ -68,6 +71,9 @@ def create_librispeech_cut(
 
     if prepare_dataset:
         prepare_librispeech(corpus_dir=audio_dir, output_dir=output_dir)
+    
+    if not get_cuts:
+        return None
 
     if phase == 'train':
         rec = load_manifest_lazy(f'{output_dir}/librispeech_recordings_train-clean-{hrs}.jsonl.gz')

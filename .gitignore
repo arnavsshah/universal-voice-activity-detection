@@ -1,9 +1,18 @@
-data/*/feats
-data/*/manifests
+data/*
+!data/*.py
 
-expirements
+experiments
 
 lhotse-test
+
+lightning_logs
+logs
+wandb
+
+swb_ms98_transcriptions
+switchboard_word_alignments.tar.gz
+voxceleb_trials.txt
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

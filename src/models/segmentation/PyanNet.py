@@ -70,6 +70,7 @@ class PyanNet(pl.LightningModule):
         self,
         lstm: dict = None,
         linear: dict = None,
+        encoding_dim: int = 768,
         sample_rate: int = 16000,
         num_channels: int = 1,
     ):
@@ -91,7 +92,7 @@ class PyanNet(pl.LightningModule):
         if monolithic:
             multi_layer_lstm = dict(lstm)
             del multi_layer_lstm["monolithic"]
-            self.lstm = nn.LSTM(80, **multi_layer_lstm)
+            self.lstm = nn.LSTM(encoding_dim, **multi_layer_lstm)
 
         else:
             num_layers = lstm["num_layers"]
@@ -106,7 +107,7 @@ class PyanNet(pl.LightningModule):
             self.lstm = nn.ModuleList(
                 [
                     nn.LSTM(
-                        80
+                        encoding_dim
                         if i == 0
                         else lstm["hidden_size"] * (2 if lstm["bidirectional"] else 1),
                         **one_layer_lstm

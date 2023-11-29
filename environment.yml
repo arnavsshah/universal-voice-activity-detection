@@ -15,8 +15,16 @@
 
 conda create --name vad python=3.8.10
 
+conda activate vad
+
+conda install -c conda-forge sox=14.4.2
+
 pip3 install torch torchaudio --index-url https://download.pytorch.org/whl/cu102
 
 pip3 -r requirements.txt
+
+pip3 install s3prl
+
+pip install speechcolab
 
 wandb login

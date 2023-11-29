@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from copy import deepcopy
 
 import torch
 import pytorch_lightning as pl
@@ -13,9 +14,9 @@ from src.utils.helper import prepare_data_module_params
 from config.config import *
 
 
-def train_vad(**kwargs):
+def predict_vad(**kwargs):
     """
-    Train the VAD model
+    Predict with the VAD model
     
     Parameters
     ----------
@@ -28,8 +29,9 @@ def train_vad(**kwargs):
         - 'supported_datasets' (list): A list of supported dataset names.
         - 'seed' (int): seed to ensure reproducibility
         - 'experiments_dir' (str): Directory path for storing experiment-related files and model checkpoints.
-        - 'dataset_names' - (list) list of datasets to be used. Each dataset has as separate dictionary of model-specific configuration. 
-            Some of them are listed below. Others might have dataset-specific paramteres 
+        - 'predict_dataset_names' - (list) list of datasets to be used for prediction (for now, one only). 
+            Each dataset has as separate dictionary of model-specific configuration. 
+            Some of them are listed below. Others might have dataset-specific paramteres
             - 'train_cut_set_path' (str): Path to the training cut set file.
             - 'dev_cut_set_path' (str): Path to the development cut set file.
             - 'test_cut_set_path' (str): Path to the test cut set file.
@@ -47,55 +49,73 @@ def train_vad(**kwargs):
 
     assert kwargs['model_name'] in kwargs['supported_models'], f"Invalid model {kwargs['model_name']}. Model should be one of {kwargs['supported_models']}"
 
-    for dataset_name in kwargs['dataset_names']:
+    for dataset_name in kwargs['predict_dataset_names']:
         assert dataset_name in kwargs['supported_datasets'], f"Invalid dataset {dataset_name}. Dataset should be one of {kwargs['supported_datasets']}"
 
-    pl.seed_everything(kwargs['seed'], workers=True)
+    assert kwargs['load_checkpoint'], "Please provide a checkpoint path to load from"
 
-    data_modules_params = prepare_data_module_params(kwargs['dataset_names'], kwargs)
-    data_module = GlobalDataModule(data_modules_params, kwargs['max_duration'])
+    pl.seed_everything(kwargs['seed'], workers=True)
 
     if not os.path.exists(kwargs['experiments_dir']):
         Path(kwargs['experiments_dir']).mkdir(parents=True, exist_ok=True)
 
-    checkpoint_callback = ModelCheckpoint(
-        every_n_epochs=3,
-        save_top_k=-1,
-        dirpath=kwargs['experiments_dir'],
-        filename="checkpoint-{epoch:02d}",
-    )
+    logger = None
 
-    if kwargs['load_checkpoint']:
-        model = VadModel.load_from_checkpoint(checkpoint_path=kwargs['checkpoint_path'])
-    else:
-        model = VadModel(
-            kwargs['model_name'], 
-            kwargs['model_dict'],
-            learning_rate=kwargs['learning_rate'],
-        )
+    model = VadModel.load_from_checkpoint(checkpoint_path=kwargs['checkpoint_path'])
 
-    if kwargs['is_wandb']:
-        logger = WandbLogger(
-            project=kwargs['wandb']['project'],
-            name=kwargs['wandb']['name'],
-            log_model=False
-        )
-    else:
-        logger = None
-
-    trainer = pl.Trainer(accelerator=kwargs['device'], 
-                        max_epochs=kwargs['max_epochs'], 
-                        # max_steps=200,
+    trainer = pl.Trainer(accelerator=kwargs['device'],
                         devices=1,
                         default_root_dir=kwargs['experiments_dir'],
                         logger=logger,
-                        callbacks=[checkpoint_callback],
-                        # log_every_n_steps=100,
-                        check_val_every_n_epoch=1,
                         deterministic=True,
                     )
 
-    trainer.fit(model, data_module)
+    data_modules_params = prepare_data_module_params(kwargs['predict_dataset_names'], kwargs)
+    data_module = GlobalDataModule(data_modules_params, kwargs['max_duration'])
+    data_module.prepare_data()
+
+    test_cuts = deepcopy(data_module.test_cuts)
+
+    frame_shift = 0.02
+    num_frames = 250
+
+    preds = trainer.predict(model, data_module.test_dataloader())  # list of (batch_size, num_frames, 1)
+
+    for i, pred in enumerate(preds):
+        # (batch_size, num_frames, 1)
+
+        test_cuts[i]['supervisions'] = []
+
+        for j, p in enumerate(pred):
+            # (num_frames, 1)
+
+            intervals = []
+            start = None
+            for k, value in enumerate(p):
+                if value >= 0.5:  # threshold 0.5
+                    if start is None:
+                        start = k * frame_shift
+                else:
+                    if start is not None:
+                        end = (k-1) * frame_shift
+                        intervals.append((start, end))
+                        start = None
+            if start is not None:
+                end = (len(p)-1) * frame_shift
+                intervals.append((start, end))
+
+
+            for interval in intervals:
+                test_cuts[i]['supervisions'].append({
+                    'start': interval[0],
+                    'duration': interval[1] - interval[0],
+                    'channel': 0,
+                })
+
+    
+
+
+
 
 
 
