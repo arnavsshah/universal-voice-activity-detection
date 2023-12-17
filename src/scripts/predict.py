@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from copy import deepcopy
+import json
 
 import torch
 import pytorch_lightning as pl
@@ -9,7 +10,7 @@ from pytorch_lightning.loggers import WandbLogger
 
 from src.engines.vad_engine import VadModel
 from src.datasets.data_module import GlobalDataModule
-from src.utils.helper import prepare_data_module_params
+from src.utils.helper import prepare_data_module_params, median_filter
 
 from config.config import *
 
@@ -74,46 +75,105 @@ def predict_vad(**kwargs):
     data_module = GlobalDataModule(data_modules_params, kwargs['max_duration'])
     data_module.prepare_data()
 
-    test_cuts = deepcopy(data_module.test_cuts)
-
-    frame_shift = 0.02
-    num_frames = 250
-
     preds = trainer.predict(model, data_module.test_dataloader())  # list of (batch_size, num_frames, 1)
 
+    # preds = median_filter(preds.squeeze(-1))  # (batch, num_frames)
+    # preds = preds.unsqueeze(-1)  # (batch, num_frames, 1)
+
+    print(len(preds))
+
+    pred_cuts = list(data_module.test_cuts.to_dicts())
+
+    frame_shift = 0.02  # if ssl, else 0.01
+    # num_frames = 250  # if ssl, else 500
+
+    # this adds disjoint supervisions - no overlap between 2 cuts (so no negative start time)
     for i, pred in enumerate(preds):
         # (batch_size, num_frames, 1)
-
-        test_cuts[i]['supervisions'] = []
 
         for j, p in enumerate(pred):
             # (num_frames, 1)
 
-            intervals = []
-            start = None
-            for k, value in enumerate(p):
-                if value >= 0.5:  # threshold 0.5
-                    if start is None:
-                        start = k * frame_shift
-                else:
-                    if start is not None:
-                        end = (k-1) * frame_shift
-                        intervals.append((start, end))
+            cut_index = i * kwargs['batch_size'] + j
+            
+            if 'supervisions' in pred_cuts[cut_index]:
+                pred_cuts[cut_index]['supervisions'] = []
+            
+                recording_id = pred_cuts[cut_index]['recording']['id']
+                channel = 0
+
+                intervals = []
+                start = None
+                for k, value in enumerate(p):
+                    if value >= 0.5:  # threshold 0.5
+                        if start is None:
+                            start = k * frame_shift
+                    else:
+                        if start is not None:
+                            end = (k-1) * frame_shift
+                            intervals.append((start, end))
+                            start = None
+                if start is not None:
+                    end = (len(p)-1) * frame_shift
+                    intervals.append((start, end))
+
+                supervision_index = 0
+                for interval in intervals:
+                    pred_cuts[cut_index]['supervisions'].append({
+                        'id': f'{recording_id}_{channel}_{supervision_index}',
+                        'recording_id': recording_id,
+                        'start': interval[0],
+                        'duration': interval[1] - interval[0],
+                        'channel': channel,
+                    })
+
+                    supervision_index += 1
+                
+            else:
+                for j, obj in enumerate(pred_cuts[cut_index]['tracks']):
+                    
+                    if 'supervisions' in obj['cut']:
+                        obj['cut']['supervisions'] = []
+                        recording_id = obj['cut']['recording']['id']
+                        channel = 0
+
+                        intervals = []
                         start = None
-            if start is not None:
-                end = (len(p)-1) * frame_shift
-                intervals.append((start, end))
+                        for k, value in enumerate(p):
+                            if value >= 0.5:  # threshold 0.5
+                                if start is None:
+                                    start = k * frame_shift
+                            else:
+                                if start is not None:
+                                    end = (k-1) * frame_shift
+                                    intervals.append((start, end))
+                                    start = None
+                        if start is not None:
+                            end = (len(p)-1) * frame_shift
+                            intervals.append((start, end))
 
+                        supervision_index = 0
+                        for interval in intervals:
+                            obj['cut']['supervisions'].append({
+                                'id': f'{recording_id}_{channel}_{supervision_index}',
+                                'recording_id': recording_id,
+                                'start': interval[0],
+                                'duration': interval[1] - interval[0],
+                                'channel': channel,
+                            })
 
-            for interval in intervals:
-                test_cuts[i]['supervisions'].append({
-                    'start': interval[0],
-                    'duration': interval[1] - interval[0],
-                    'channel': 0,
-                })
+                            supervision_index += 1
+                        
+                        pred_cuts[cut_index]['tracks'][j] = obj
 
     
+    if not os.path.exists(kwargs['predict_output_dir']):
+        Path(kwargs['predict_output_dir']).mkdir(parents=True, exist_ok=True)
 
+    # store pred_cuts in a jsonl file
+    with open(os.path.join(kwargs['predict_output_dir'], 'pred.jsonl'), 'w') as f:
+        for pred_cut in pred_cuts:
+            f.write(json.dumps(pred_cut) + '\n')
 
 
 

@@ -23,15 +23,33 @@ def load_chime6_cut(cut_set_path: Pathlike) -> lhotse.CutSet:
     return load_manifest_lazy(cut_set_path)
 
 
-def create_chime6_cut(
+def create_chime6_dataset(
     corpus_dir: Pathlike,
+    output_dir: Optional[Pathlike] = None,
+    mic: Optional[str] = 'ihm',
+    **kwargs
+) -> None:
+
+    output_dir = Path(output_dir) if output_dir else Path('/export/c01/ashah108/vad/data/chime6/manifests')
+
+    if not os.path.exists(output_dir):
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+    prepare_chime6(
+        corpus_dir=corpus_dir,
+        output_dir=output_dir,
+        mic=mic,
+        sox_path='/home/ashah108/miniconda3/envs/vad/bin/sox',
+    )
+
+
+def create_chime6_cut(
     output_dir: Optional[Pathlike] = None,
     mic: Optional[str] = 'ihm',
     feats_dir: Optional[Pathlike] = None,
     batch_duration: int = 600,
     phase: Optional[str] = 'train',
-    prepare_dataset: Optional[bool] = False,
-    get_cuts: Optional[bool] = True
+    **kwargs
 ) -> lhotse.CutSet:
 
     phases = ["eval", "train", "dev"]
@@ -46,52 +64,40 @@ def create_chime6_cut(
     if not os.path.exists(feats_dir):
         feats_dir.mkdir(parents=True, exist_ok=True)
 
-    if prepare_dataset:
-        prepare_chime6(
-            corpus_dir=corpus_dir,
-            output_dir=output_dir,
-            mic=mic,
-            sox_path='/home/ashah108/miniconda3/envs/vad/bin/sox',
-        )
+    rec = load_manifest_lazy(f'{output_dir}/chime6-{mic}_recordings_{phase}.jsonl.gz')
+    sup = load_manifest_lazy(f'{output_dir}/chime6-{mic}_supervisions_{phase}.jsonl.gz')
+    base_filename = f'{phase}_{mic}'
 
-    if not get_cuts:
-        return None
-
-    else:
-        rec = load_manifest_lazy(f'{output_dir}/chime6-{mic}_recordings_{phase}.jsonl.gz')
-        sup = load_manifest_lazy(f'{output_dir}/chime6-{mic}_supervisions_{phase}.jsonl.gz')
-        base_filename = f'{phase}_{mic}'
-
-        cuts = CutSet.from_manifests(
-            recordings=rec,
-            supervisions=sup
-        )
+    cuts = CutSet.from_manifests(
+        recordings=rec,
+        supervisions=sup
+    )
+    
+    multi_cuts = cuts.multi_cuts
+    mono_cuts = []
+    for id, multi_cut in multi_cuts.items():
+        mono_cuts.append(multi_cut.to_mono(mono_downmix=False)[0])
         
-        multi_cuts = cuts.multi_cuts
-        mono_cuts = []
-        for id, multi_cut in multi_cuts.items():
-            mono_cuts.append(multi_cut.to_mono(mono_downmix=False)[0])
-            
-        cuts = CutSet.from_cuts(mono_cuts).cut_into_windows(duration=5).filter(lambda cut: cut.duration > 3)
+    cuts = CutSet.from_cuts(mono_cuts).cut_into_windows(duration=5).filter(lambda cut: cut.duration > 3)
 
-        cuts.to_file(f'{output_dir}/{base_filename}_cuts_ssl.jsonl.gz')
+    cuts.to_file(f'{output_dir}/{base_filename}_cuts_ssl.jsonl.gz')
 
-        # extractor = Fbank(FbankConfig(device='cuda'))
+    # extractor = Fbank(FbankConfig(device='cuda'))
 
-        # cuts = CutSet.from_file(f'{output_dir}/{base_filename}_cuts.jsonl.gz')
-        extractor = S3PRLSSL(S3PRLSSLConfig(device='cuda', ssl_model='wav2vec2'))
+    # cuts = CutSet.from_file(f'{output_dir}/{base_filename}_cuts.jsonl.gz')
+    extractor = S3PRLSSL(S3PRLSSLConfig(device='cuda', ssl_model='wav2vec2'))
 
-        cuts = cuts.compute_and_store_features_batch(
-            extractor=extractor,
-            storage_path=f'{feats_dir}/{base_filename}_feats_ssl',
-            batch_duration=batch_duration,
-            num_workers=4,
-            overwrite=True
-        ).pad(duration=5.0)
+    cuts = cuts.compute_and_store_features_batch(
+        extractor=extractor,
+        storage_path=f'{feats_dir}/{base_filename}_feats_ssl',
+        batch_duration=batch_duration,
+        num_workers=4,
+        overwrite=True
+    ).pad(duration=5.0)
 
 
-        cuts.to_file(f'{output_dir}/{base_filename}_cuts_feats_ssl.jsonl.gz')
-        # cuts.describe()
+    cuts.to_file(f'{output_dir}/{base_filename}_cuts_feats_ssl.jsonl.gz')
+    # cuts.describe()
 
-        return cuts
+    return cuts
 

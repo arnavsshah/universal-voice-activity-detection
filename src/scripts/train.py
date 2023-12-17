@@ -53,13 +53,13 @@ def train_vad(**kwargs):
     pl.seed_everything(kwargs['seed'], workers=True)
 
     data_modules_params = prepare_data_module_params(kwargs['dataset_names'], kwargs)
-    data_module = GlobalDataModule(data_modules_params, kwargs['max_duration'])
-
+    data_module = GlobalDataModule(data_modules_params, kwargs['max_duration'], weights=kwargs['dataset_weights'], stop_early=kwargs['stop_early'])
+    
     if not os.path.exists(kwargs['experiments_dir']):
         Path(kwargs['experiments_dir']).mkdir(parents=True, exist_ok=True)
 
     checkpoint_callback = ModelCheckpoint(
-        every_n_epochs=3,
+        every_n_epochs=1,
         save_top_k=-1,
         dirpath=kwargs['experiments_dir'],
         filename="checkpoint-{epoch:02d}",
@@ -85,12 +85,10 @@ def train_vad(**kwargs):
 
     trainer = pl.Trainer(accelerator=kwargs['device'], 
                         max_epochs=kwargs['max_epochs'], 
-                        # max_steps=200,
                         devices=1,
                         default_root_dir=kwargs['experiments_dir'],
                         logger=logger,
                         callbacks=[checkpoint_callback],
-                        # log_every_n_steps=100,
                         check_val_every_n_epoch=1,
                         deterministic=True,
                     )

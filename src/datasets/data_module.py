@@ -7,15 +7,7 @@ import pytorch_lightning as pl
 from lhotse import CutSet
 from lhotse.dataset import VadDataset, SimpleCutSampler
 
-from src.datasets import (
-    get_ami_cut,
-    get_switchboard_cut,
-    get_dihard3_cut,
-    get_librispeech_cut,
-    get_callhome_english_cut,
-    get_callhome_egyptian_cut,
-    get_chime6_cut
-)
+from src.datasets import *
 
 Pathlike = Union[Path, str]
 
@@ -25,6 +17,8 @@ class GlobalDataModule(pl.LightningDataModule):
         self,
         data_modules_params: Dict[str, list],
         max_duration: int,
+        weights: Optional[Dict[str, float]] = None,
+        stop_early: bool = True,
     ):
 
         """
@@ -39,11 +33,17 @@ class GlobalDataModule(pl.LightningDataModule):
                 - test_data_dict : Dict[str, str]
         max_duration : int
             Maximum duration of a batch in seconds
+        weights : Optional[Dict[str, float]], optional
+            Dictionary of weights for each dataset, by default None
+        stop_early : bool, optional
+            Whether to stop early when a batch exceeds the maximum duration, by default True
         """
 
         super().__init__()
         self.data_modules_params = data_modules_params
         self.max_duration = max_duration
+        self.weights = list(weights.values()) if weights is not None else None
+        self.stop_early = stop_early
 
         self.train_cuts_all, self.dev_cuts_all, self.test_cuts_all = [], [], []
     
@@ -79,6 +79,16 @@ class GlobalDataModule(pl.LightningDataModule):
                 self.train_cuts_all.append(get_chime6_cut(**value[0]))
                 self.dev_cuts_all.append(get_chime6_cut(**value[1]))
                 self.test_cuts_all.append(get_chime6_cut(**value[2]))
+            
+            if key == 'tedlium':
+                self.train_cuts_all.append(get_tedlium_cut(**value[0]))
+                self.dev_cuts_all.append(get_tedlium_cut(**value[1]))
+                self.test_cuts_all.append(get_tedlium_cut(**value[2]))
+
+            if key == 'voxconverse':
+                self.train_cuts_all.append(get_voxconverse_cut(**value[0]))
+                self.dev_cuts_all.append(get_voxconverse_cut(**value[1]))
+                self.test_cuts_all.append(get_voxconverse_cut(**value[2]))
 
 
         # combine all cuts
@@ -89,7 +99,10 @@ class GlobalDataModule(pl.LightningDataModule):
 
         # multiplex cuts
         else:
-            self.train_cuts = CutSet.mux(*self.train_cuts_all, stop_early=False)
+            if self.weights:
+                self.train_cuts = CutSet.mux(*self.train_cuts_all, weights=self.weights, stop_early=self.stop_early)
+            else:
+                self.train_cuts = CutSet.mux(*self.train_cuts_all, stop_early=self.stop_early)
             self.dev_cuts = CutSet.mux(*self.dev_cuts_all)
             self.test_cuts = CutSet.mux(*self.test_cuts_all)
 
@@ -98,7 +111,7 @@ class GlobalDataModule(pl.LightningDataModule):
     def train_dataloader(self):
         dataset = VadDataset()
         sampler = SimpleCutSampler(self.train_cuts, max_duration=self.max_duration, shuffle=True)
-        return DataLoader(dataset, sampler=sampler, batch_size=None, num_workers=10)
+        return DataLoader(dataset, sampler=sampler, batch_size=None, num_workers=4)
 
     def val_dataloader(self):
         dataset = VadDataset()

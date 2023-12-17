@@ -14,6 +14,7 @@ import wandb
 
 from src.models.segmentation.PyanNet import PyanNet
 from src.utils.loss import binary_cross_entropy
+from src.utils.helper import median_filter
 
 from config.config import *
 
@@ -101,15 +102,15 @@ class VadModel(pl.LightningModule):
 
         self.log_dict(
             {
-                'train_loss': loss_dict['loss'],
+                'train_detection_error_rate': (stat_scores[1] + stat_scores[3]) / denominator,
+                'train_false_alarm': stat_scores[1] / denominator,
+                'train_missed_detection': stat_scores[3] / denominator,
                 'train_acc': self.train_accuracy,
                 'train_precision': self.train_precision,
                 'train_recall': self.train_recall,
                 'train_f1_score': self.train_f1_score,
-                'train_false_alarm': stat_scores[1] / denominator,
-                'train_missed_detection': stat_scores[3] / denominator,
                 'train_denominator': denominator,
-                'train_detection_error_rate': (stat_scores[1] + stat_scores[3]) / denominator,
+                'train_loss': loss_dict['loss'],
             },
             batch_size=120, 
             on_step=False, 
@@ -119,9 +120,9 @@ class VadModel(pl.LightningModule):
         )
 
         # do not backpropagate, do not update gradients. COnvert y_pred with threshold is 0.5 to either 0 or 1. Then, sum y_pred and y to print it out.
-        with torch.no_grad():
-            x = torch.where(y_pred < 0.5, 0, 1).to('cuda')
-            print(x.sum().item(), y.sum().item())
+        # with torch.no_grad():
+        #     x = torch.where(y_pred < 0.5, 0, 1).to('cuda')
+        #     print(x.sum().item(), y.sum().item())
 
         return loss_dict['loss']
 
@@ -138,15 +139,15 @@ class VadModel(pl.LightningModule):
 
         self.log_dict(
             {
-                'val_loss': loss_dict['loss'],
+                'val_detection_error_rate': (stat_scores[1] + stat_scores[3]) / denominator,
+                'val_false_alarm': stat_scores[1] / denominator,
+                'val_missed_detection': stat_scores[3] / denominator,
                 'val_acc': self.val_accuracy,
                 'val_precision': self.val_precision,
                 'val_recall': self.val_recall,
                 'val_f1_score': self.val_f1_score,
-                'val_false_alarm': stat_scores[1] / denominator,
-                'val_missed_detection': stat_scores[3] / denominator,
-                'val_denominator': denominator,
-                'val_detection_error_rate': (stat_scores[1] + stat_scores[3]) / denominator,
+                'val_denominator': float(denominator),
+                'val_loss': loss_dict['loss'],
             },
             batch_size=120, 
             on_step=False, 
@@ -165,6 +166,9 @@ class VadModel(pl.LightningModule):
     
     def test_step(self, batch, batch_idx):
         loss_dict, y_pred, y = self._common_step(batch, batch_idx, 'val')
+
+        y_pred = median_filter(y_pred.squeeze(-1))  # (batch, frames)
+        y_pred = y_pred.unsqueeze(-1)  # (batch, frames, 1)
         
         self.test_accuracy(y_pred.squeeze(-1), y)
         self.test_precision(y_pred.squeeze(-1), y)
@@ -175,15 +179,15 @@ class VadModel(pl.LightningModule):
 
         self.log_dict(
             {
-                'test_loss': loss_dict['loss'],
+                'test_detection_error_rate': (stat_scores[1] + stat_scores[3]) / denominator,
+                'test_false_alarm': stat_scores[1] / denominator,
+                'test_missed_detection': stat_scores[3] / denominator,
                 'test_acc': self.test_accuracy,
                 'test_precision': self.test_precision,
                 'test_recall': self.test_recall,
                 'test_f1_score': self.test_f1_score,
-                'test_false_alarm': stat_scores[1] / denominator,
-                'test_missed_detection': stat_scores[3] / denominator,
+                'test_loss': loss_dict['loss'],
                 'test_den': denominator,
-                'test_detection_error_rate': (stat_scores[1] + stat_scores[3]) / denominator,
             },
             batch_size=120, 
             on_step=False, 
@@ -200,14 +204,14 @@ class VadModel(pl.LightningModule):
         # denominator = y_pred.shape[0] * y_pred.shape[1]
         
         self.log_dict({
+            'train_detection_error_rate': (stat_scores[1] + stat_scores[3]) / self.total_train_duration,
+            'train_false_alarm': stat_scores[1] / self.total_train_duration,
+            'train_missed_detection': stat_scores[3] / self.total_train_duration,
             'train_acc': self.train_accuracy.compute(),
             'train_precision': self.train_precision.compute(),
             'train_recall': self.train_recall.compute(),
             'train_f1_score': self.train_f1_score.compute(),
-            'train_false_alarm': stat_scores[1] / self.total_train_duration,
-            'train_missed_detection': stat_scores[3] / self.total_train_duration,
             'train_denominator': self.total_train_duration,
-            'train_detection_error_rate': (stat_scores[1] + stat_scores[3]) / self.total_train_duration,
         })
 
         self.total_train_duration = 0
@@ -217,14 +221,14 @@ class VadModel(pl.LightningModule):
         # denominator = y_pred.shape[0] * y_pred.shape[1]
 
         self.log_dict({
+            'val_detection_error_rate': (stat_scores[1] + stat_scores[3]) / self.total_val_duration,
+            'val_false_alarm': stat_scores[1] / self.total_val_duration,
+            'val_missed_detection': stat_scores[3] / self.total_val_duration,
             'val_acc': self.val_accuracy.compute(),
             'val_precision': self.val_precision.compute(),
             'val_recall': self.val_recall.compute(),
             'val_f1_score': self.val_f1_score.compute(),
-            'val_false_alarm': stat_scores[1] / self.total_val_duration,
-            'val_missed_detection': stat_scores[3] / self.total_val_duration,
             'val_denominator': self.total_val_duration,
-            'val_detection_error_rate': (stat_scores[1] + stat_scores[3]) / self.total_val_duration,
         })
 
         self.total_val_duration = 0

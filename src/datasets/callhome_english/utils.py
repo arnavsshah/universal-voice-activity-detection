@@ -23,15 +23,32 @@ def load_callhome_english_cut(cut_set_path: Pathlike) -> lhotse.CutSet:
     return load_manifest_lazy(cut_set_path)
 
 
-def create_callhome_english_cut(
+def create_callhome_english_dataset(
     audio_dir: Pathlike,
     transcript_dir: Optional[Pathlike] = None,
+    output_dir: Optional[Pathlike] = None,
+    **kwargs
+) -> None:
+
+    output_dir = Path(output_dir) if output_dir else Path('/export/c01/ashah108/vad/data/callhome_english/manifests')
+
+    if not os.path.exists(output_dir):
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+    prepare_callhome_english(
+        audio_dir=audio_dir,
+        transcript_dir=transcript_dir,
+        output_dir=output_dir,
+        absolute_paths=True,
+    )
+
+
+def create_callhome_english_cut(
     output_dir: Optional[Pathlike] = None,
     feats_dir: Optional[Pathlike] = None,
     batch_duration: int = 600,
     phase: Optional[str] = 'train',
-    prepare_dataset: Optional[bool] = False,
-    get_cuts: Optional[bool] = True
+    **kwargs
 ) -> lhotse.CutSet:
 
     phases = ["evaltest", "train", "devtest"]
@@ -46,54 +63,42 @@ def create_callhome_english_cut(
     if not os.path.exists(feats_dir):
         feats_dir.mkdir(parents=True, exist_ok=True)
 
-    if prepare_dataset:
-        prepare_callhome_english(
-            audio_dir=audio_dir,
-            transcript_dir=transcript_dir,
-            output_dir=output_dir,
-            absolute_paths=True,
-        )
+    rec = load_manifest_lazy(f'{output_dir}/callhome-english_recordings_{phase}.jsonl.gz')
+    sup = load_manifest_lazy(f'{output_dir}/callhome-english_supervisions_{phase}.jsonl.gz')
+    base_filename = f'{phase}'
 
-    if not get_cuts:
-        return None
-
-    else:
-        rec = load_manifest_lazy(f'{output_dir}/callhome-english_recordings_{phase}.jsonl.gz')
-        sup = load_manifest_lazy(f'{output_dir}/callhome-english_supervisions_{phase}.jsonl.gz')
-        base_filename = f'{phase}'
-
-        cuts = CutSet.from_manifests(
-            recordings=rec,
-            supervisions=sup
-        ).resample(16000).cut_into_windows(duration=5).filter(lambda cut: cut.duration > 3)
+    cuts = CutSet.from_manifests(
+        recordings=rec,
+        supervisions=sup
+    )
+    
+    multi_cuts = cuts.multi_cuts
+    mono_cuts = []
+    for id, multi_cut in multi_cuts.items():
+        mono_cuts.append(multi_cut.to_mono(mono_downmix=False)[0])
         
-        multi_cuts = cuts.multi_cuts
-        mono_cuts = []
-        for id, multi_cut in multi_cuts.items():
-            mono_cuts.append(multi_cut.to_mono(mono_downmix=False)[0])
-            
-        # cuts = CutSet.from_cuts(mono_cuts).resample(16000).cut_into_windows(duration=5).filter(lambda cut: cut.duration > 3)
-        cuts = CutSet.from_cuts(mono_cuts)
+    cuts = CutSet.from_cuts(mono_cuts).resample(16000).cut_into_windows(duration=5).filter(lambda cut: cut.duration > 3)
+    # cuts = CutSet.from_cuts(mono_cuts)
 
-        cuts.to_file(f'{output_dir}/{base_filename}_cuts.jsonl.gz')
+    cuts.to_file(f'{output_dir}/{base_filename}_cuts_ssl.jsonl.gz')
 
-        extractor = Fbank(FbankConfig(
-            sampling_rate=16000,
-            device='cuda'
-        ))
-        # extractor = S3PRLSSL(S3PRLSSLConfig(device='cuda', ssl_model='wav2vec2'))
+    # extractor = Fbank(FbankConfig(
+    #     sampling_rate=16000,
+    #     device='cuda'
+    # ))
+    extractor = S3PRLSSL(S3PRLSSLConfig(device='cuda', ssl_model='wav2vec2'))
 
-        cuts = cuts.compute_and_store_features_batch(
-            extractor=extractor,
-            storage_path=f'{feats_dir}/{base_filename}_feats',
-            batch_duration=batch_duration,
-            num_workers=4,
-            overwrite=True
-        ).pad(duration=5.0)
+    cuts = cuts.compute_and_store_features_batch(
+        extractor=extractor,
+        storage_path=f'{feats_dir}/{base_filename}_feats_ssl',
+        batch_duration=batch_duration,
+        num_workers=4,
+        overwrite=True
+    ).pad(duration=5.0)
 
 
-        cuts.to_file(f'{output_dir}/{base_filename}_cuts_feats.jsonl.gz')
-        # cuts.describe()
+    cuts.to_file(f'{output_dir}/{base_filename}_cuts_feats_ssl.jsonl.gz')
+    # cuts.describe()
 
-        return cuts
+    return cuts
 

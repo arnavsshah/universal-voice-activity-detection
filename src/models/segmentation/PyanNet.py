@@ -59,10 +59,10 @@ class PyanNet(pl.LightningModule):
     # SINCNET_DEFAULTS = {"stride": 10}
     LSTM_DEFAULTS = {
         "hidden_size": 128,
-        "num_layers": 2,
+        "num_layers": 4,
         "bidirectional": True,
         "monolithic": True,
-        "dropout": 0.0,
+        "dropout": 0.5,
     }
     LINEAR_DEFAULTS = {"hidden_size": 128, "num_layers": 2}
 
