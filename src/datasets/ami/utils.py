@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Dict, Optional, Union
 
 import lhotse
-from lhotse import load_manifest_lazy, CutSet, S3PRLSSLConfig, S3PRLSSL
+from lhotse import load_manifest_lazy, CutSet, Fbank, FbankConfig, S3PRLSSLConfig, S3PRLSSL
 from lhotse.recipes import prepare_ami
 
 
@@ -45,6 +45,7 @@ def create_ami_cut(
     mic: Optional[str] = 'ihm',
     batch_duration: int = 600,
     phase: Optional[str] = 'train',
+    feature_extractor: Optional[str] = 'wav2vec2',
     **kwargs
 ) -> lhotse.CutSet:
 
@@ -70,27 +71,40 @@ def create_ami_cut(
     mono_cuts = []
     for id, multi_cut in multi_cuts.items():
         mono_cuts.append(multi_cut.to_mono(mono_downmix=False)[0])
-        
-    cuts = CutSet.from_cuts(mono_cuts).cut_into_windows(duration=5).filter(lambda cut: cut.duration > 3)
+    
+    cuts = CutSet.from_cuts(mono_cuts)
 
-    cuts.to_file(f'{output_dir}/{base_filename}_cuts_ssl.jsonl.gz')
+    cuts.to_file(f'{output_dir}/{base_filename}_cuts_og.jsonl.gz')
 
-    # extractor = Fbank(FbankConfig(device='cuda'))
+    cuts_trim = cuts.trim_to_supervisions(keep_overlapping=False, keep_all_channels=False)
+    cuts_trim.to_file(f'{output_dir}/{base_filename}_cuts_trim.jsonl.gz')
 
-    # cuts = CutSet.from_file(f'{output_dir}/{base_filename}_cuts.jsonl.gz')
-    extractor = S3PRLSSL(S3PRLSSLConfig(device='cuda', ssl_model='wav2vec2'))
+    cuts = cuts.cut_into_windows(duration=5).filter(lambda cut: cut.duration > 3)
+
+    cuts.to_file(f'{output_dir}/{base_filename}_cuts_window.jsonl.gz')
+
+    cuts = cuts.subset(first=len(cuts.to_eager()))  # progress bar doesn't appear otherwise
+    
+    if feature_extractor == 'fbank':
+        extractor = Fbank(FbankConfig(sampling_rate=16000, device='cuda'))
+    else:
+        extractor = S3PRLSSL(S3PRLSSLConfig(device='cuda', ssl_model=feature_extractor))
 
     cuts = cuts.compute_and_store_features_batch(
         extractor=extractor,
-        storage_path=f'{feats_dir}/{base_filename}_feats_ssl',
+        storage_path=f'{feats_dir}/{base_filename}_{feature_extractor}',
         batch_duration=batch_duration,
         num_workers=4,
         overwrite=True
     ).pad(duration=5.0)
 
 
-    cuts.to_file(f'{output_dir}/{base_filename}_cuts_feats_ssl.jsonl.gz')
+    cuts.to_file(f'{output_dir}/{base_filename}_cuts_{feature_extractor}.jsonl.gz')
     # cuts.describe()
 
     return cuts
+
+
+
+
 

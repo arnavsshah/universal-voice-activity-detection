@@ -87,7 +87,7 @@ class PyanNet(pl.LightningModule):
         self.save_hyperparameters("lstm", "linear")
 
         # self.sincnet = SincNet(**self.hparams.sincnet)
-
+        self.encoding_dim = encoding_dim
         monolithic = lstm["monolithic"]
         if monolithic:
             multi_layer_lstm = dict(lstm)

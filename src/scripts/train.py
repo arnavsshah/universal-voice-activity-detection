@@ -53,13 +53,19 @@ def train_vad(**kwargs):
     pl.seed_everything(kwargs['seed'], workers=True)
 
     data_modules_params = prepare_data_module_params(kwargs['dataset_names'], kwargs)
-    data_module = GlobalDataModule(data_modules_params, kwargs['max_duration'], weights=kwargs['dataset_weights'], stop_early=kwargs['stop_early'])
+    data_module = GlobalDataModule(data_modules_params,
+                                    kwargs['max_duration'],
+                                    weights_dict=kwargs['dataset_weights'],
+                                    stop_early=kwargs['stop_early'],
+                                    enable_musan=kwargs['enable_musan'],
+                                    musan_cut_set_path=kwargs['musan']['cut_set_path'],)
+    data_module.prepare_data()
     
     if not os.path.exists(kwargs['experiments_dir']):
         Path(kwargs['experiments_dir']).mkdir(parents=True, exist_ok=True)
 
     checkpoint_callback = ModelCheckpoint(
-        every_n_epochs=1,
+        every_n_epochs=3,
         save_top_k=-1,
         dirpath=kwargs['experiments_dir'],
         filename="checkpoint-{epoch:02d}",
@@ -85,12 +91,13 @@ def train_vad(**kwargs):
 
     trainer = pl.Trainer(accelerator=kwargs['device'], 
                         max_epochs=kwargs['max_epochs'], 
-                        devices=1,
+                        devices=kwargs['num_devices'],
                         default_root_dir=kwargs['experiments_dir'],
                         logger=logger,
                         callbacks=[checkpoint_callback],
-                        check_val_every_n_epoch=1,
+                        check_val_every_n_epoch=kwargs['check_val_every_n_epoch'],
                         deterministic=True,
+                        use_distributed_sampler=not kwargs['distributed_training'],
                     )
 
     trainer.fit(model, data_module)

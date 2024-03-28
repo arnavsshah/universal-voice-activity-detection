@@ -1,0 +1,651 @@
+0.0	0.708	Okay folks,
+0.708	2.142	we're coming to a short stairway,
+2.142	2.97	use the handrails,
+2.97	3.924523	and be careful please.
+94.8	95.277	Okay folks,
+95.277	96.34	let's find out where we are.
+96.866	98.29	We got on the elevator right here,
+98.621	100.921	came down and stood on the balcony overlooking the power plant,
+101.57900000000001	102.58299	down that stairway,
+102.583	104.621	out on the power plant ramp about that far,
+104.911	106.461	then right at that yellow line.
+106.508	110.367	And you're now standing over the second-largest water pipe in the world,
+110.637	112.087984	and it's called a penstock.
+112.429	113.627	More about that a little bit later.
+114.612105	115.57598	The Colorado River,
+115.636697	116.776	flows in this direction.
+117.196083	118.334	In order to build a dam here,
+118.334	119.995	the very first thing they had to do,
+120.215	121.396449	was to get rid of that river.
+121.861	124.008	So they came up here above where the dam was to be built,
+124.282	125.594808	and drilled and blasted out,
+125.615	127.057	four diversion tunnels.
+127.480819	128.691819	Two on either side,
+128.922	130.008	into the canyon wall,
+130.008	131.566	around where the dam was to be built,
+131.766	133.016	out in the river down below.
+133.456	137.006	Each one of these tunnels were drilled and blasted out at fifty-six feet in diameter,
+137.329	139.037	and then lined with three feet of concrete.
+139.42000000000002	141.699632	You're now standing in one of those old diversion tunnels.
+142.33	143.06299	They then came up here,
+143.063	145.367	and they built a cofferdam about a hundred feet high,
+145.648422	148.020672	to force this river into these diversion tunnels.
+148.428248	149.22499	Came back down here,
+149.225	150.932	built the other part of that cofferdam,
+151.19199999999998	152.772	about sixty-five feet high,
+153.064306	155.457306	to keep this water from backing into the work area.
+155.978	157.228	They now had from here,
+157.527	158.984241	to here where they could build a dam.
+159.448926	161.035	They pumped the water out of this area,
+161.085	164.614	and excavated down another hundred and thirty-five feet to bedrock.
+165.082014	165.55	Okay folks,
+165.55	166.21	if you will please,
+166.21	168.142	take a look at this picture taken during construction,
+168.626	170.72362	looks like a series of boxes or blocks,
+170.764	172.16	stacked one on top of the other,
+172.62	174.6135	and those are wooden concrete forms.
+175.004	177.334	Each one of those forms are exactly five feet high,
+177.74381	179.611	but they did vary in area somewhat,
+179.659	182.756	because they did not build the dam right straight across the river,
+182.996634	184.596	from canyon wall to canyon wall,
+184.944498	186.542998	they built it in the form of an arc.
+186.954	189.276116	And it's called an arch gravity design dam.
+189.577	190.917	Where the force of the water,
+190.965	193.414	coming down the Colorado River hits the face of the dam,
+193.744	197.034	and tends to try to drive these wingtips further into the canyon wall.
+197.709	199.075	It's a very strong design.
+200.019	202.209	They did build two concrete mixing plants here,
+202.265	204.764	they did pour concrete for twenty-four hours a day,
+204.764	205.808	seven days a week,
+206.109607	207.968	three hundred and sixty-five days a year.
+208.32500000000002	209.24125	For two years,
+209.502	210.92962	less six days.
+211.01	215.743	Now every bit of that concrete came down in individual eight-cubic-yard bucketloads.
+216.063	218.363806	Eight cubic yards of concrete into one of these forms,
+218.724	221.104	the smallest of which is twenty-two by twenty-five feet,
+221.483	224.138243	only filled that form up about three or four inches deep.
+224.622627	226.502565	So there goes that story you may have heard,
+226.543	228.852	that there are workers buried in the concrete here.
+229.094018	230.263956	Couldn't possibly happen.
+231.005	233.265	But what they did bury in that freshly poured concrete,
+233.54299999999998	235.089766	was one-inch steel water pipe.
+235.614835	237.43221	They came down here in this lower cofferdam,
+237.877	239.212391	and they built an ice plant.
+239.554639	242.144	Capable of making a thousand tons of ice a day.
+242.684	243.632803	They used that ice,
+243.653	244.716	to chill the water,
+244.916572	247.576	that they forced through that pipe in this newly placed concrete.
+248.10500000000002	249.221	As concrete hardens,
+249.241	250.501	or cures as we call it,
+250.731	251.766498	it produces heat.
+252.289547	253.899359	The more you can control that heat,
+254.261625	255.97	the better job of curing you're going to get.
+256.456828	257.91	So they used the chilled water method,
+257.91	259.011	of taking that cold water,
+259.291	261.674833	forcing it through that pipe in that newly placed concrete,
+262.019511	263.277136	picking up some of that heat,
+263.579692	265.088	then carrying that heat out and away.
+265.65177	267.991	They felt if they did not use a method such as this,
+268.036	271.6	that it would've taken approximately one hundred and fifty years,
+271.6	274.952	for the concrete in the interior part of the dam to cool down.
+275.412	276.433706	So the system did work.
+276.784	277.555	And then it hardened,
+277.555	279.138	and they remove these wooden forms,
+279.33799999999997	280.185	they left voids.
+280.185	282.38	Vertically and horizontally these forms came together,
+282.8	284.187687	those voids were filled with grout.
+284.248	285.215	Under high pressure.
+285.557574	287.405	Grout being a mixture of concrete and water.
+287.835018	288.601	When this is done,
+288.601	291.376	you have what we call a modified monolithic pour,
+291.596	293.527759	or basically a solid block of concrete,
+293.568	297.237	which when completed would be six hundred and sixty feet across the base,
+297.57800000000003	299.197	fourty-five feet across the top,
+299.607676	302.086176	twelve hundred and fourty-four feet from wingtip to wingtip,
+302.457	305.077	seven hundred and twenty-six point four feet high.
+306.229	309.00273	Six point six million tons of concrete.
+309.063	313.871	That's enough concrete to build a two-lane highway from New York City to San Francisco.
+314.33099999999996	314.562	Or,
+314.562	315.313	put another way,
+315.313	318.459	a four-foot wide sidewalk from the North Pole to the South Pole.
+318.94	320.739	Then they had to protect that concrete a little bit,
+321.105	323.667489	the next thing they had to do then is build a couple of spillways.
+324.108	326.259982	As you got out of your cars or your busses this afternoon,
+326.26	327.816	you may have noticed those spillways.
+327.816	328.543	Here they are,
+328.543	329.686	one on either side.
+329.686	330.808	What they did,
+330.808	331.507	is they came in here,
+331.507	334.4	and they blocked these diversion tunnels off in this area through here,
+334.982375	336.28	closed these gates up here,
+336.688	339.068	now this yellow part is forever under water.
+339.416	340.5	Underneath that lake out there,
+340.5	341.699	and completely useless.
+342.059	343.281	But they did incorporate,
+343.281	344.791	into the design of the dam,
+345.073458	346.909645	the balance of those diversion tunnels,
+347.36	349.95	using these outer two as spillway tunnels.
+350.37699999999995	351.582	Now these spillways were built,
+351.582	353.106	so that the top of the spillway,
+353.366	355.924986	is twenty-seven feet lower than the top of the dam.
+356.546	360.056	This assures us that n- any excess water coming down the Colorado River,
+360.52456	362.211	rather than overtopping the dam,
+362.53	364.72	overtops these spillways on either side,
+364.993	366.26098	goes into the canyon wall,
+366.261	367.225	around the dam,
+367.505	368.715	out in the river down below.
+369.38	374.73971	Each one of these spillways is capable of handling two hundred thousand cubic feet per second of water.
+375.3625	377.775563	That's the same amount of water that goes over Niagara Falls.
+378.259509	380.338	Falls three times higher than Niagara Falls does,
+380.680067	382.598	time that water reaches this area down in here,
+382.913	384.648516	it is flowing at between one hundred,
+384.989	386.723667	and one hundred and twenty miles an hour.
+387.407366	388.975741	Okay we have protected the spillways,
+389.298197	390.496	now they had to get some water,
+391.078	392.074857	into the power plant.
+392.33500000000004	394.565699	What they did is they built four intake towers.
+394.886986	396.71398	Two on either side of the river,
+396.714	398.037	on ledges above the river,
+398.43699999999995	400.733819	each of those towers that you saw out there in that lake,
+401.064	403.250826	are three hundred and ninety-five feet high.
+403.711	406.391	Each with two-eleven-by-thirty-two-foot gates in them,
+406.726	407.703	one gate near the bottom,
+407.703	408.784	one about half way up,
+409.105741	410.071178	to let the water in.
+410.495	412.222	The water then coming into the penstocks,
+412.45300000000003	414.103	like the one we're standing over right now.
+414.64787	415.438	This penstock,
+415.438	417.204	you can see on either side of us out here,
+417.454	418.46799	is three stories high,
+418.468	419.879	or thirty feet in diameter,
+420.18100000000004	422.922627	made of two-and-three-quarter-inch steel boilerplate.
+423.37300000000005	425.313	Made in section twenty-two feet long.
+425.36	429.277	Each section weighing approximately a hundred and fifty tons.
+429.54699999999997	432.197	Each of these twenty-two-foot sections is joined to the next section,
+432.518	433.920232	using pressure pins like this.
+434.58356	436.801	The water pressure in that penstock out there this afternoon,
+436.874	440.22	approximately two hundred and thirty-four pounds per square inch.
+440.847	441.95	Okay we have the water this far,
+442.281938	445.121688	now we divert that into thirteen-foot penstocks or water pipes,
+445.42199999999997	446.753495	each one of em going to a turbine.
+447.464	449.275	The force of the water turns the turbine,
+449.295	451.099	which turns the rotor in the generator,
+451.289	452.330252	and generates power.
+452.813	454.52377	The water then coming on the tailrace,
+454.564	455.53	we saw it up there,
+455.53	458.911	and going on downstream to be used at least six more times,
+458.911	460.589	before it reaches the Mexican border,
+460.79098	461.882105	to generate more power.
+462.50300000000004	465.676	Good clean reusable non-polluting source of energy.
+467.000884	468.205572	The cost of the project.
+468.70599999999996	470.828424	A hundred and seventy-five million dollars.
+471.289	472.082292	I say project,
+472.143	474.06	because that includes the building of the dam,
+474.42	476.81375	the building of Boulder City about seven miles up the road,
+477.154701	480.241826	the highway and the railway from Las Vegas out here to the dam site,
+480.65200000000004	483.352	and in southern California they built the All-American Canal,
+483.641252	485.789	which takes water to the people and the crops,
+486.062	487.87462	of the Imperial and Coachella Valleys.
+488.275761	491.262824	This money was borrowed on a fifty-year term at three-percent interest,
+491.664306	494.093681	and was paid off in full in nineteen eighty-seven.
+495.178764	496.063	The people who worked here,
+496.063	497.806	and they did work twenty-four hours a day,
+498.13599999999997	501.107299	average twenty-four-hour work force was about thirty-five hundred men.
+501.771107	504.707732	The most they had at any one time was when they were pouring concrete,
+505.051	506.243482	fourty-three hundred men.
+507.206864	509.712739	The laborers on the job made fifty cents an hour.
+509.793	513.058	Highest paid man on the project was a power shovel operator,
+513.328	514.946692	at a dollar and a quarter an hour.
+515.487	516.563	Out of each man's paycheck,
+516.603	518.832	the contractor did deduct each day,
+519.1419999999999	520.702	a dollar and sixty cents.
+521.052895	522.771	Because the contractor was feeding,
+523.0550000000001	524.825	and housing the men in Boulder City,
+525.137	527.483882	and taking them back and forth out here to the job site.
+528.649	530.974	They did have ninety-six industrial deaths.
+531.02	534.561	The biggest single category of death was classified as falling material.
+534.902	536.106685	Basically falling rock.
+536.61	538.546484	But they did have some killed by explosion,
+538.91	539.736609	some by drowning,
+539.777	540.995	some by electrocution,
+541.295	543.688574	and other types of accidents you might expect to have.
+544.019	545.26698	On a job of this magnitude.
+546.211607	547.436857	They did complete the project,
+547.457	548.651	two years ahead of schedule,
+548.651	549.663	and under budget.
+549.953	551.565493	Started in early nineteen thirty-one,
+551.908299	553.722486	completed in late nineteen thirty-five.
+554.004493	555.977868	Just twelve days short of five years.
+556.503	557.879565	Do I have any questions.
+559.172	560.584995	What's this overhead pipe here <UNK>.
+560.7750000000001	561.589739	The overhead pipe.
+561.79	562.796773	That's the fresh air pipe.
+563.947	564.867	In the summertime,
+564.928	567.904	the temperature of the air outside gets to be as high as a hundred and twenty degrees.
+568.184866	569.374	So they bring that fresh air in,
+569.449	572.377	and they pass that fresh air over a sump at the base of the dam,
+572.578	575.027507	the water in that sump is a constant fifty-three degrees.
+575.148	578.53	It cools that air down to between sixty-eight and seventy-two degrees,
+578.810835	580.375585	then they force it back throughout the dam.
+580.7379999999999	582.679	So it's air-conditioning without refrigeration.
+582.699	584.65	Like a big evaporative cooler or swamp cooler.
+585.85	586.549585	Any other questions.
+586.9200000000001	587.23	Yes.
+588.256283643522	588.71342798	Uh,
+588.612	591.056	during the uh earthquake this morning,
+591.056	592.275	do you have any sensors down here,
+592.275	594.004	that measure any kind of movement,
+594.004	595.885	of structures,
+595.186	595.574	Right.
+596.145	596.465	Yes.
+596.704	597.795616	W- v- we have several things.
+598.077697	599.971009	First place we have three seismographs throughout the dam.
+600.2919999999999	601.07	We recorded those,
+601.07	602.219	but nobody down here felt em.
+602.5400000000001	603.624	But we do have sensors,
+603.664	604.786	built right into the concrete,
+605.026	606.410924	any movement that concrete makes,
+606.6210000000001	607.819708	is measured and recorded.
+608.29	609.829875	And they had very little of it this morning.
+609.85	610.46	Very little.
+612.1129999999999	612.838891	Any other questions.
+613.1990000000001	614.597877	How far are you sending electricity.
+614.699	615.337	California?
+615.557	615.815	Okay.
+615.836	618.47	Fifty-six percent of our power goes to southern California,
+618.711	620.27	twenty-five percent of it stays in Nevada,
+620.691	622.331	nineteen percent of it goes to Arizona.
+622.9300000000001	623.682	What the government did,
+623.682	626.909	is they got together the delegates from those three states in nineteen thirty.
+627.190417	630.145542	To allocate the power that would be generated here when this dam was completed.
+630.748	632.696986	California was growing very fast at that time,
+632.697	634.359	so they asked for and got most of the power.
+634.9290000000001	635.872	But by the same token,
+635.872	636.405	Las Vegas,
+636.405	638.021	about thirty-five miles up the road here,
+638.341	639.131373	at that time,
+639.414	641.433581	was nothing but a watering stop on the railroad.
+641.8340000000001	642.484	No hotels,
+642.504	643.396	no casinos,
+643.766	647.086	we asked Las Vegas to take five percent of the power we could produce here,
+647.395	648.425301	and they agreed to do that.
+648.828	650.046	But that's all they get today.
+650.377572	653.636197	Because that contract is good through the year two-thousand and seventeen.
+654.224069	655.057319	So all those lights.
+655.098	656.652	You see burning up there in Las Vegas,
+656.914831	658.612	comes from power from steam plants,
+658.914	660.864	owned and operated by Nevada Power Company,
+661.153	662.413	using fossil fuel.
+662.72	664.439188	They get very little of our hydroelectric power.
+664.891625	665.284	Okay folks,
+665.284	665.896	you can follow me now,
+665.896	666.791	I'm gonna lead us out of here.
+672.9689999999999	673.914	Okay,
+673.914	674.692	here we go folks.
+691.867	692.62	Quite amazing.
+692.62	695.47	Y- yes it's a fantastic job they did down here.
+695.5740000000001	695.925835	Yeah.
+716.352	717.837	About how many people are employed here.
+717.837	718.29	Now.
+718.673773	719.93	Right now there's about two hundred.
+720.628547	721.95199	That includes the security people,
+721.952	722.579	the guide force,
+722.579	723.415	the nursing staff,
+723.777199	725.655	the people that run the computer room,
+725.709	726.45	the office force,
+726.45	727.838	as well as the people that work on the dam.
+728.0799999999999	729.410192	And that's a twenty-four-hour figure.
+729.935	731.991	But that figure is becoming smaller every year,
+732.355511	734.839886	because every year we are becoming more highly computerized.
+738.2479999999999	739.244	Okay folks,
+739.244	740.457	there's a tour group coming in,
+740.457	741.533	stay to your right please,
+741.533	742.185453	stay to your right.
+756.826426	757.658364	Stay to your right folks,
+757.699	758.622	tour group coming out.
+784.85	785.125	Okay,
+785.125	785.472	if you would,
+785.472	786.179	right up this stairway,
+786.179	787.005	when you get on the balcony,
+787.005	788.896	wait for me on the blue couches on the balcony please.
+790.726	792.116	Anybody needs the elevator it's available.
+804.481	806.287	Anybody that needs the elevator it's is available.
+826.132	826.452706	Come on.
+845.09	845.51	Come on then.
+849.2289999999999	850.932	Up the stairway if you can <UNK>.
+850.932	852.085	Up the stairway.
+852.185864	852.488551	That's
+854.8338839002756	856.01080067	Up the stairs.
+860.8094371854496	861.91244131	Okay,
+861.825	862.375	here we go.
+867.792	868.557	Hi.
+874.577	876.611	That was the turbine over here,
+876.611	877.331	off to the side
+877.331	877.56	Yeah,
+877.56	878.23	that's the turbine runner.
+878.23	878.583	You bet.
+879.385556	881.643	That's a computer design made of stainless steel,
+881.693	883.249	it's designed in such a way,
+883.52973	885.374605	there's one of em running at a hundred and eighty RPM,
+885.777	888.234824	it actually lifts that eight hundred tons up a quarter of an inch,
+888.255	892.565	for your main thrust bearing is the very top of this uh structure right down here.
+892.945	893.705	This is the rotor.
+895.192898	897.17	The rotor and the runner,
+897.478132	899.226	have come out of our A-Seven generator,
+899.226	901.05	what happened we lost a water seal down there.
+901.312523	903.211	So we had to pull those out to fix that water seal,
+903.513708	905.331208	they'll be replaced within a couple of weeks now.
+905.513	906.116268	Oh I see.
+906.618069	909.646819	That rotor in that part of the shaft weighs five hundred and eighty tons.
+935.115	935.723451	Okay folks,
+935.764	936.418	if you will please,
+936.418	937.038	follow me now.
+1035.801	1036.527	Hey <UNK>,
+1036.217	1037.113	How you doing?
+1037.113	1037.398828	Good.
+1049.257	1049.7	Okay folks,
+1049.7	1050.566	while we're waiting for the elevators,
+1050.566	1051.742	does anybody have any questions.
+1051.884	1053.848	How long have you been doing these tours.
+1053.548	1054.469	About five years.
+1054.714542	1055.328542	About five years.
+1056.01	1056.99071	I've retired twice,
+1057.011	1057.895	can't stand retirement so,
+1057.895	1059.013	come back to work at a fun job.
+1059.013	1059.483	<LAUGH> Oh.
+1061.3129999999999	1063.091	Anybody have any questions.
+1065.5815847771007	1066.07623096	Yeah,
+1065.987	1066.489	~Ben,
+1066.931167	1068.209	water comes down the center of the,
+1068.42	1069.437255	where your shaft is,
+1069.478	1070.622	goes out the turbine,
+1071.212	1071.422	No.
+1071.474	1072.324	Goes around the dam.
+1072.324	1073.503	Water comes into those towers,
+1073.747931	1074.533	goes around the dam,
+1074.585	1075.681	comes in from the side.
+1075.781998	1076.801	Each individual turbine?
+1077.473	1077.743	Yeah?
+1077.838	1080.174	The water drops in the center where the shaft goes in,
+1080.174	1080.831	then goes down,
+1080.367	1080.831	No no.
+1081.021	1081.261	No.
+1081.518	1082.396255	It comes into what they c-
+1082.437	1083.838	It comes in that thirteen-foot pipe,
+1083.838	1084.74	goes into what they call,
+1085.163	1086.955813	the area of the wicket gate,
+1087.336	1087.727	and there
+1087.727	1089.64	And there's a pipe around that wicket gate,
+1090.0500000000002	1092.22	and that pipe goes from a thirteen-foot diameter,
+1092.269	1093.485	down to a three-foot diameter,
+1093.485	1094.732	goes around that wicket gate?
+1094.732	1095.34	Okay.
+1095.144	1095.62	Right?
+1095.34	1096.445	It picks up speed.
+1096.445	1097.839	By the time it enters that ap-
+1097.839	1098.688	goes out that aperture,
+1098.688	1099.442	that three-foot aperture,
+1099.442	1101.163	it's traveling at fifty-seven miles an hour.
+1101.643	1103.022931	But that's what drives that big turbine.
+1103.273	1104.731868	It goes around the shaft.
+1104.752	1106.483	It doesn't go into the shaft area at all.
+1107.754181	1108.460431	The wicket gate.
+1108.661	1110.12	All the water goes in through the wicket gate.
+1111.0030000000002	1112.487813	It's coming in underneath.
+1112.528	1112.759	Yeah.
+1112.759	1113.33	The wick-
+1113.043	1114.039	Perpendicular,
+1113.33	1114.039	Th- well,
+1114.039	1115.374	perpendicular to the shaft.
+1114.039	1115.374	and yeah.
+1115.374	1116.861	The generator's sitting on top.
+1115.374	1116.085	A- i- okay.
+1116.085	1117.081	The shaft is like this,
+1117.081	1118.358	and water's coming in like this.
+1117.194	1117.481	Right.
+1118.165	1118.715	That's what I thought.
+1118.358	1119.952	And then it goes around like this,
+1118.715	1119.184	Oh yeah.
+1119.952	1120.807	and then out.
+1119.952	1121.502	Now that thing we saw down laying that-,
+1121.502	1121.772	uh,
+1121.772	1122.516	alongside,
+1122.336	1122.516	Okay.
+1122.516	1123.179	with the uh,
+1123.179	1123.566	looked like a
+1123.179	1123.566	That's a,
+1123.566	1124.833	that's a r- turbine runner.
+1124.874	1125.224578	We call.
+1125.307	1126.07	Turbine runner.
+1125.307	1126.07	That- and that's,
+1126.1509999999998	1126.578898	is that is that,
+1126.903	1128.11775	kicked up on the side like that,
+1128.138	1128.548	the water,
+1129.049	1129.27798	No,
+1129.278	1130.39	it just lays it
+1129.524	1130.139	Spinning it around?
+1130.39	1131.953	Oh you mean the one d- on the floor down there?
+1131.637	1132.162	Yeah yeah.
+1132.162	1133.422	No that's laying flat like this,
+1132.358	1132.682	<UNK>
+1133.422	1135.073	and the water drives that around this way like this,
+1134.761	1135.574	Oh you're right <UNK>.
+1135.073	1136.194	and drives the turbine up there yeah.
+1136.194	1137.699	And that's down inside the uh,
+1137.699	1138.556	in the turbine.
+1137.844	1138.556	That's way down
+1138.556	1138.804	Yeah.
+1138.804	1139.76	Way down in the turbine.
+1138.804	1139.615	So it's in the turbine.
+1139.615	1140.025	And that's the,
+1139.76	1140.025	Unhunh,
+1140.025	1140.223	yeah.
+1140.025	1140.77	that's what's generating,
+1140.653	1140.99	Yeah.
+1140.77	1141.9	that's what's turning the wheel.
+1141.9	1142.12	Right.
+1142.368	1142.575	Right.
+1142.575	1143.225	We were right on that.
+1143.225	1143.473	Right.
+1145.0547377934295	1145.80523545	Okay folks,
+1145.655	1146.927	step right in the elevator please,
+1147.051	1147.587	right on in,
+1149.1329999999998	1150.03499	step right in the elevator.
+1152.3436619719196	1152.88491265	Three,
+1152.811	1153.275	four,
+1153.275	1153.549	five,
+1153.821252	1154.171002	six,
+1154.315	1154.852	seven,
+1154.852	1155.217	eight,
+1155.3470000000002	1155.582444	nine,
+1155.746116	1156.124	ten,
+1156.30587	1156.721	eleven,
+1156.7839999999999	1157.137	twelve.
+1157.261	1159.665	Thirteen fourteen fifteen sixteen,
+1161.1051535156425	1162.01828382	nineteen,
+1162.095203	1162.501	twenty,
+1163.029	1163.233	alright,
+1163.283	1163.873	are you with them?
+1164.659	1165.002	Okay.
+1166.328	1168.924	Okay I saved room for you.
+1169.143319	1169.476	All right,
+1169.476	1170.071	thanks a lot man.
+1169.905	1170.294	You bet.
+1174.044	1176.186	Folks this does conclude your tour of the dam,
+1176.488736	1178.043	hope you enjoyed it as much as I enjoying have you,
+1178.043	1179.023	come back and see us again.
+1179.244743	1180.353806	Have any questions on the way up,
+1180.544	1181.074	ask Norm.
+1181.344938	1182.05	Bye-bye folks.
+1185.2575325407797	1186.15585549	Okay,
+1185.848	1187.033	any more questions folks.
+1187.073203	1188.641266	What's the story with this tile.
+1189.664745	1190.949	Wasn't this created by somebody?
+1191.049855	1191.259	Yeah.
+1191.643	1191.890181	Folks,
+1192.15277	1193.989	the dam was built as a tourist attraction,
+1194.009	1195.223	as well as being very functional,
+1195.613	1196.911	this terrazzo flooring you see,
+1196.911	1199.221	terrazzo is marble chips put down in concrete,
+1199.501	1200.561	ground down and polished,
+1201.058	1203.79	this terrazzo flooring was put in here by one Italian family,
+1203.79	1204.923	by the name of Martina.
+1205.484931	1209.393	Okay there's two and three-quarter acres of this uh t- uh terrazzo flooring in the floor,
+1209.68	1210.939	but the designs you see,
+1211.3660000000002	1213.136	is what that Italian family saw,
+1213.202	1216.622	and interpretated from southwest Indian blankets and pottery.
+1216.622	1217.987	That's where the designs came from.
+1219.707	1220.597	Any other questions.
+1220.647	1223.194	Are there just two elevators down,
+1223.194	1224.151	from these two shafts,
+1224.151	1225.272	that'll take you to <UNK>
+1224.669	1225.272	That's right.
+1225.3819999999998	1226.130143	Two elevators down.
+1226.171	1226.498	Mhm?
+1226.498	1227.554	The rest of it's just solid.
+1227.554	1227.933	Right.
+1228.984	1229.428	Well there are,
+1229.6280000000002	1232.278	there are two miles of tunnels going this way across the dam.
+1232.7730000000001	1233.807357	They have a pipe gallery,
+1234.1119999999999	1235.047	they have a drainage gallery,
+1235.047	1235.446	they have a
+1235.856	1237.617736	a uh cable gallery,
+1237.878	1239.286192	and they have an instrumentation gallery.
+1239.897	1240.641	And all those things are
+1240.641	1244.332	They measure constantly the condition of the dam with that instrumentation gallery.
+1245.259	1246.407	Y'all open seven days a week?
+1247.098	1247.287982	Yeah.
+1247.288	1247.500044	Mhm?
+1248.0810000000001	1248.778	Is it unusual to-,
+1248.778	1251.376	to do the generator uh room floor?
+1251.376	1252.082	In something like this?
+1252.082	1252.509	There's just
+1252.549	1252.75648	Yeah.
+1252.839	1253.697	It it's in fact,
+1253.697	1254.954	it was built during the depression,
+1254.954	1256.648	and they wanted to make it a tourist attra-
+1255.357	1256.648	Make it make it worth talking.
+1256.648	1258.47	It was at that time the largest dam in the world,
+1258.876	1259.932	they wanted to make it very nice,
+1259.932	1260.128	yeah,
+1260.128	1260.83	it's unusual.
+1260.83	1262.714	Usually you just have concrete decks.
+1261.189	1261.598	Yeah.
+1262.174	1262.537	I would
+1262.714	1263.158	Yeah.
+1262.825	1263.158	Yeah.
+1263.148	1263.768	Yeah.
+1265.738	1266.788	Any other questions folks.
+1267.4850000000001	1267.775	Yes.
+1267.82	1270.809	What are the chances of a leak?
+1270.809	1271.522	Hm?
+1271.522	1272.15	<LAUGH>
+1271.792	1273.679	What are the chances of a leak.
+1273.999	1274.22199	Well,
+1274.322	1275.332058	it leaks all the time.
+1275.818	1277.023	You see concrete's porous.
+1277.316	1278.321761	And because concrete's porous,
+1278.362	1279.888	there's water coming through at all times.
+1280.2279999999998	1280.966232	But that's good.
+1281.327	1283.091	Because if there're no moisture in concrete,
+1283.3909999999998	1284.026333	it dries out,
+1284.067	1285.19	and spalls and chips,
+1285.19	1286.337	and turns to powder.
+1286.547	1287.712569	Wouldn't make a very good dam.
+1288.198	1289.45	So as long as that lake is back there,
+1289.45	1291.713	forcing that water through the concrete at all times,
+1292.0339999999999	1294.363	it keeps that concrete in a stage of what we call being green.
+1294.80481	1296.431	Green concrete's very strong.
+1296.8239999999998	1297.904491	So we have a good strong dam.
+1298.778049	1299.256	Say ~Ben,
+1299.347	1299.828	Yes.
+1299.565	1301.0	what's going on up on the hill up here,
+1301.0	1301.819	don't think it's uh
+1301.222	1301.415	Okay.
+1301.415	1303.21	That's a five-story parking garage,
+1303.51	1305.084648	and the new building is a new visitors center.
+1305.689	1307.986489	The five-story parking garage will hold four-hundred and fifty cars.
+1308.4470000000001	1308.797	Okay,
+1308.797	1310.101	the new f- visitors center,
+1310.363373	1312.422435	will have three revolving theaters in it,
+1312.923	1315.22899	it'll have a seating area for people going on tour,
+1315.229	1316.122	it'll have a museum,
+1316.424	1318.952	the top deck of that building will be an observation platform,
+1319.266	1320.852	we can look back at the dam in one direction,
+1320.872	1321.761	downstream in the other.
+1322.22656	1322.50998	Now,
+1322.51	1323.352	when that's all done,
+1323.636081	1324.87399	they hope to be able to figure,
+1325.194	1328.284	to handle between one point two and one point three million people a year.
+1328.796	1329.631799	Last year we had,
+1329.672	1333.226	seven hundred and twenty-nine thousand eight hundred and eighty-nine people go through the dam,
+1333.526	1334.507	but we had to turn people away,
+1334.527	1335.455	almost every night.
+1335.7769999999998	1336.925	Just not enough time in the day,
+1336.925	1338.492	to get everybody through the dam that would like to see it.
+1338.492	1338.825831	Hmm.
+1338.951	1340.707	Will it have any slot machines in it?
+1341.1770000000001	1341.401	No,
+1341.401	1342.109	but it'd be a good idea,
+1341.401	1341.675	<LAUGH>
+1342.109	1342.467	wouldn't it.
+1342.467	1343.242	<LAUGH>
+1342.467	1343.881	Pay for this place.
+1343.489	1344.358	<LAUGH>
+1343.753	1345.811	When's completion on that parking garage.
+1346.373645	1348.291	They figure between fifteen and seventeen months.
+1348.632931	1348.861368	Yeah.
+1349.4940000000001	1350.246	Okay folks,
+1350.246	1351.432	step right in the elevator please.
+1352.512	1353.132	Right on in.
+1360.792	1363.552	Everyone please face the front of the car.
+1362.405	1364.195	It's gonna be seventeen more months?
+1364.495	1365.318136	Seventeen more months?
+1366.661565	1368.805752	Everyone face the front of the car please.
+1368.906	1374.209	Right to there.
+1373.907	1375.459	Front of the car please.
+1376.06319	1377.695	Have they ever had to use the spillway?
+1377.755	1378.151	Just a minute.
+1378.151	1381.73	Okay folks,
+1381.73	1383.102	this does conclude your tour of the dam,
+1383.102	1384.684	I hope you enjoyed it as much as I enjoyed having you,
+1385.047241	1385.794	come back and see us again,
+1385.794	1387.035	have any questions on the way up,
+1387.2450000000001	1387.815	ask Norm.
+1388.068174	1388.826	Bye-bye folks.
+1388.878	1389.245	Thanks ~Ben.
+1389.245	1392.091	Have they ever had to use the spillway?
+1392.091	1392.396	Okay.
+1392.578	1392.841	Folks,
+1392.841	1393.545	the question is,
+1393.545	1394.985	did they ever have to use the spillway.
+1395.465	1395.835	Yes.
+1395.884	1397.098	Just once in the history of the dam,
+1397.098	1398.382	and that was nineteen eighty-three.
+1398.382	1400.016	What happened that year,
+1400.317697	1402.626	is they had a very heavy snowpack in the Rocky Mountains,
+1402.972	1404.931	and that was followed by rain and hot weather,
+1405.301748	1407.04581	which created a flooding condition.
+1407.486	1410.086	We had more water coming down the Colorado River system,
+1410.385	1411.798386	than they could put through the power plant.
+1412.349	1415.609	Every reservoir in the Colorado River system was full to overflowing that year.
+1416.104	1416.904	On July second,
+1417.297	1419.017	water overtopped our spillways out here.
+1419.4850000000001	1420.143	Six days later,
+1420.143	1422.053	it was going over four and a half feet high.
+1422.455766	1424.248016	And that went on for sixty-six days.
+1424.829	1427.099	At the end of that time there was no damage to the dam,
+1427.41	1428.345	or to the power plant,
+1428.865864	1431.435	but further on downstream where people had built in the floodplain,
+1431.874708	1433.894395	they did have thirty million dollars worth of damage,
+1434.196	1435.160511	but no loss of life.
+1435.6019999999999	1438.121	But that flood's what left that white line around the lake out there.
+1438.875643	1441.227768	That white line indicates it was going over the spillways,
+1441.6100000000001	1443.282232	four and a half feet above floodstage.
+1443.7730000000001	1444.807868	It gives a false impression,
+1444.828	1446.745	and makes it look like the lake of the level is low.
+1446.846114	1447.975	Or level the lake of the low.
+1448.61	1450.172	Actually we're eight feet above normal,
+1450.172	1450.999	for this time of year.
+1451.6671427057618	1452.37588875	Wow.
+1452.6979999999999	1454.207	Yeah we had a very good snowpack last year.

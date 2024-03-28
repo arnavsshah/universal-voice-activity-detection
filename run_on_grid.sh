@@ -2,20 +2,21 @@
 
 #$ -wd /export/c01/ashah108/vad
 #$ -V
-#$ -N vad-ami-ted-swbd-test
+#$ -N cuts_50
 #$ -j y -o logs/$JOB_NAME
 #$ -M ashah108@jh.edu
 #$ -m e
-#$ -l ram_free=8G,mem_free=8G,gpu=1,hostname=c01
-
-# #$ -l ram_free=5G,mem_free=5G,gpu=1,hostname=b1[123456789]|c0*|c1[123456789]
+#$ -l ram_free=10G,mem_free=10G,gpu=1,hostname=b15
 
 # Submit to GPU queue
 #$ -q g.q
 
 # source /home/gqin2/scripts/acquire-gpu
 
-conda activate vad
+# conda activate universal-vad
+export PATH="/home/ashah108/miniconda3/envs/universal-vad/bin:$PATH"
+source activate /home/ashah108/miniconda3/envs/universal-vad
+
 
 # CUDA_LAUNCH_BLOCKING=1 python main.py
 

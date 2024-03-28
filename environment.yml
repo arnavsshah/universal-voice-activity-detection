@@ -1,30 +1,28 @@
-# name: vad
-# channels:
-#   - defaults
-#   - conda-forge
-#   - pytorch
-# dependencies:
-#   - python==3.8.10
-#   - pytorch
-#   - torchaudio
-#   - cudatoolkit=10.2
-#   - pip
-#   - pip:
-#       - -r requirements.txt
+name: universal-vad
+channels:
+  - defaults
+  - nvidia
+  - pytorch
+  - conda-forge
+dependencies:
+  - python==3.8.10
+  - conda-forge::sox==14.4.2
+  - nvidia::cudatoolkit=10.2
+  - pytorch::pytorch==1.12.1
+  - pytorch::torchaudio==0.12.1
+  - pip
+  - pip:
+      - -r requirements.txt
 
 
-conda create --name vad python=3.8.10
+# conda create --name vad python=3.8.10
 
-conda activate vad
+# conda activate vad
 
-conda install -c conda-forge sox=14.4.2
+# conda install -c conda-forge sox=14.4.2
 
-pip3 install torch torchaudio --index-url https://download.pytorch.org/whl/cu102
+# pip3 install torch torchaudio --index-url https://download.pytorch.org/whl/cu102
 
-pip3 -r requirements.txt
+# pip3 -r requirements.txt
 
-pip3 install s3prl
-
-pip install speechcolab
-
-wandb login
+# wandb login

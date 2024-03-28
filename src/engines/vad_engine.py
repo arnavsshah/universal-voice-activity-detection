@@ -62,8 +62,8 @@ class VadModel(pl.LightningModule):
         self.val_stat_scores = BinaryStatScores()
         self.test_stat_scores = BinaryStatScores()
 
-        self.total_train_duration = 0
-        self.total_val_duration = 0
+        # self.total_train_duration = 0
+        # self.total_val_duration = 0
 
     
     def forward(self, audio_feats: torch.Tensor) -> torch.Tensor:
@@ -86,7 +86,7 @@ class VadModel(pl.LightningModule):
         
 
     def training_step(self, batch, batch_idx):
-        loss_dict, y_pred, y = self._common_step(batch, batch_idx, 'train')
+        loss_dict, y_pred, y = self._common_step(batch, batch_idx)
 
         # with torch.no_grad():
         #     x = torch.where(y_pred < 0.5, 0, 1).to('cuda')
@@ -98,7 +98,7 @@ class VadModel(pl.LightningModule):
         self.train_f1_score(y_pred.squeeze(-1), y)
         stat_scores = self.train_stat_scores(y_pred.squeeze(-1), y)
         denominator = y_pred.shape[0] * y_pred.shape[1]
-        self.total_train_duration += denominator
+        # self.total_train_duration += denominator
 
         self.log_dict(
             {
@@ -109,17 +109,18 @@ class VadModel(pl.LightningModule):
                 'train_precision': self.train_precision,
                 'train_recall': self.train_recall,
                 'train_f1_score': self.train_f1_score,
-                'train_denominator': denominator,
+                'train_denominator': float(denominator),
                 'train_loss': loss_dict['loss'],
             },
             batch_size=120, 
             on_step=False, 
             on_epoch=True, 
             prog_bar=False, 
-            logger=True
+            logger=True,
+            sync_dist=True
         )
 
-        # do not backpropagate, do not update gradients. COnvert y_pred with threshold is 0.5 to either 0 or 1. Then, sum y_pred and y to print it out.
+        # do not backpropagate, do not update gradients. Convert y_pred with threshold is 0.5 to either 0 or 1. Then, sum y_pred and y to print it out.
         # with torch.no_grad():
         #     x = torch.where(y_pred < 0.5, 0, 1).to('cuda')
         #     print(x.sum().item(), y.sum().item())
@@ -127,7 +128,7 @@ class VadModel(pl.LightningModule):
         return loss_dict['loss']
 
     def validation_step(self, batch, batch_idx):
-        loss_dict, y_pred, y = self._common_step(batch, batch_idx, 'val')
+        loss_dict, y_pred, y = self._common_step(batch, batch_idx)
         
         self.val_accuracy(y_pred.squeeze(-1), y)
         self.val_precision(y_pred.squeeze(-1), y)
@@ -135,7 +136,7 @@ class VadModel(pl.LightningModule):
         self.val_f1_score(y_pred.squeeze(-1), y)
         stat_scores = self.val_stat_scores(y_pred.squeeze(-1), y)
         denominator = y_pred.shape[0] * y_pred.shape[1]
-        self.total_val_duration += denominator
+        # self.total_val_duration += denominator
 
         self.log_dict(
             {
@@ -153,7 +154,8 @@ class VadModel(pl.LightningModule):
             on_step=False, 
             on_epoch=True, 
             prog_bar=False, 
-            logger=True
+            logger=True,
+            sync_dist=True
         )
 
         # # do not backpropagate, do not update gradients. COnvert y_pred with threshold is 0.5 to either 0 or 1. Then, sum y_pred and y to print it out.
@@ -165,9 +167,10 @@ class VadModel(pl.LightningModule):
 
     
     def test_step(self, batch, batch_idx):
-        loss_dict, y_pred, y = self._common_step(batch, batch_idx, 'val')
+        loss_dict, y_pred, y = self._common_step(batch, batch_idx)
 
-        y_pred = median_filter(y_pred.squeeze(-1))  # (batch, frames)
+        window = 0.02 if self.model.encoding_dim == 768 else 0.01
+        y_pred = median_filter(y_pred.squeeze(-1), window=window)  # (batch, frames)
         y_pred = y_pred.unsqueeze(-1)  # (batch, frames, 1)
         
         self.test_accuracy(y_pred.squeeze(-1), y)
@@ -186,55 +189,65 @@ class VadModel(pl.LightningModule):
                 'test_precision': self.test_precision,
                 'test_recall': self.test_recall,
                 'test_f1_score': self.test_f1_score,
+                'test_denominator': float(denominator),
                 'test_loss': loss_dict['loss'],
-                'test_den': denominator,
             },
             batch_size=120, 
             on_step=False, 
             on_epoch=True, 
-            prog_bar=True, 
+            prog_bar=False, 
             logger=True
         )
 
         return loss_dict['loss']
 
 
-    def on_train_epoch_end(self):
-        stat_scores = self.train_stat_scores.compute()
-        # denominator = y_pred.shape[0] * y_pred.shape[1]
+    def predict_step(self, batch, batch_idx):
+        loss_dict, y_pred, y = self._common_step(batch, batch_idx)
+
+        window = 0.02 if self.model.encoding_dim == 768 else 0.01
+        y_pred = median_filter(y_pred.squeeze(-1), window=window)  # (batch, frames)
+        y_pred = y_pred.unsqueeze(-1)  # (batch, frames, 1)
         
-        self.log_dict({
-            'train_detection_error_rate': (stat_scores[1] + stat_scores[3]) / self.total_train_duration,
-            'train_false_alarm': stat_scores[1] / self.total_train_duration,
-            'train_missed_detection': stat_scores[3] / self.total_train_duration,
-            'train_acc': self.train_accuracy.compute(),
-            'train_precision': self.train_precision.compute(),
-            'train_recall': self.train_recall.compute(),
-            'train_f1_score': self.train_f1_score.compute(),
-            'train_denominator': self.total_train_duration,
-        })
-
-        self.total_train_duration = 0
-
-    def on_val_epoch_end(self):
-        stat_scores = self.val_stat_scores.compute()
-        # denominator = y_pred.shape[0] * y_pred.shape[1]
-
-        self.log_dict({
-            'val_detection_error_rate': (stat_scores[1] + stat_scores[3]) / self.total_val_duration,
-            'val_false_alarm': stat_scores[1] / self.total_val_duration,
-            'val_missed_detection': stat_scores[3] / self.total_val_duration,
-            'val_acc': self.val_accuracy.compute(),
-            'val_precision': self.val_precision.compute(),
-            'val_recall': self.val_recall.compute(),
-            'val_f1_score': self.val_f1_score.compute(),
-            'val_denominator': self.total_val_duration,
-        })
-
-        self.total_val_duration = 0
+        return y_pred
 
 
-    def _common_step(self, batch, batch_idx, stage: Literal['train', 'val']):
+    # def on_train_epoch_end(self):
+    #     stat_scores = self.train_stat_scores.compute()
+    #     # denominator = y_pred.shape[0] * y_pred.shape[1]
+        
+    #     self.log_dict({
+    #         'train_detection_error_rate': (stat_scores[1] + stat_scores[3]) / self.total_train_duration,
+    #         'train_false_alarm': stat_scores[1] / self.total_train_duration,
+    #         'train_missed_detection': stat_scores[3] / self.total_train_duration,
+    #         'train_acc': self.train_accuracy.compute(),
+    #         'train_precision': self.train_precision.compute(),
+    #         'train_recall': self.train_recall.compute(),
+    #         'train_f1_score': self.train_f1_score.compute(),
+    #         'train_denominator': self.total_train_duration,
+    #     })
+
+    #     self.total_train_duration = 0
+
+    # def on_val_epoch_end(self):
+    #     stat_scores = self.val_stat_scores.compute()
+    #     # denominator = y_pred.shape[0] * y_pred.shape[1]
+
+    #     self.log_dict({
+    #         'val_detection_error_rate': (stat_scores[1] + stat_scores[3]) / self.total_val_duration,
+    #         'val_false_alarm': stat_scores[1] / self.total_val_duration,
+    #         'val_missed_detection': stat_scores[3] / self.total_val_duration,
+    #         'val_acc': self.val_accuracy.compute(),
+    #         'val_precision': self.val_precision.compute(),
+    #         'val_recall': self.val_recall.compute(),
+    #         'val_f1_score': self.val_f1_score.compute(),
+    #         'val_denominator': self.total_val_duration,
+    #     })
+
+    #     self.total_val_duration = 0
+
+
+    def _common_step(self, batch, batch_idx):
         """
         Default step to be executed in training or validation loop
 
@@ -244,16 +257,12 @@ class VadModel(pl.LightningModule):
             Current batch.
         batch_idx: int
             Batch index.
-        stage : {"train", "val"}
-            "train" for training step, "val" for validation step
 
         Returns
         -------
         loss : {str: torch.tensor}
             {"loss": loss}
         """
-
-        assert stage in ['train', 'val'], f"stage can only be in {['train', 'val']}. You have stage={stage}"
 
         # forward pass
         y_pred = self.model(batch['inputs'])

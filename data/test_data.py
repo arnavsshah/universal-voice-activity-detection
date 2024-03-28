@@ -5,12 +5,13 @@ from src.datasets.data_module import GlobalDataModule
 from config.config import *
 
 
-def test(x, name, kwargs):
-    data_module = GlobalDataModule(x, kwargs['max_duration'])
-    data_module.prepare_data()
+def test(data_modules_params, name, kwargs):
+    data_module = GlobalDataModule(data_modules_params, kwargs['max_duration'])
+    data_module.setup()
     dataloader = data_module.train_dataloader()
 
     time = 0
+    # 'inputs', 'input_lens', 'is_voice', 'cut'
     for batch in dataloader:
         time += 600
     
@@ -32,13 +33,14 @@ def test_data(**kwargs):
         data_modules_params['ami'] = [train_data_dict, dev_data_dict, test_data_dict]
         test(data_modules_params, 'ami', kwargs)
 
-    if 'dihard3' in kwargs['dataset_names']:
+    if 'tedlium' in kwargs['dataset_names']:
         data_modules_params = {}
-        dev_data_dict = {'cut_set_path': kwargs['dihard3']['dev_cut_set_path']}
-        test_data_dict = {'cut_set_path': kwargs['dihard3']['test_cut_set_path']}
+        train_data_dict = {'cut_set_path': kwargs['tedlium']['train_cut_set_path']}
+        dev_data_dict = {'cut_set_path': kwargs['tedlium']['dev_cut_set_path']}
+        test_data_dict = {'cut_set_path': kwargs['tedlium']['test_cut_set_path']}
 
-        data_modules_params['dihard3'] = [dev_data_dict, test_data_dict]
-        test(data_modules_params, 'dihard3', kwargs)
+        data_modules_params['tedlium'] = [train_data_dict, dev_data_dict, test_data_dict]
+        test(data_modules_params, 'tedlium', kwargs)
 
     if 'switchboard' in kwargs['dataset_names']:
         data_modules_params = {}
@@ -49,23 +51,14 @@ def test_data(**kwargs):
         data_modules_params['switchboard'] = [train_data_dict, dev_data_dict, test_data_dict]
         test(data_modules_params, 'switchboard', kwargs)
 
-    if 'callhome_english' in kwargs['dataset_names']:
+    if 'voxconverse' in kwargs['dataset_names']:
         data_modules_params = {}
-        train_data_dict = {'cut_set_path': kwargs['callhome_english']['train_cut_set_path']}
-        dev_data_dict = {'cut_set_path': kwargs['callhome_english']['dev_cut_set_path']}
-        test_data_dict = {'cut_set_path': kwargs['callhome_english']['test_cut_set_path']}
+        train_data_dict = {'cut_set_path': kwargs['voxconverse']['train_cut_set_path']}
+        dev_data_dict = {'cut_set_path': kwargs['voxconverse']['dev_cut_set_path']}
+        test_data_dict = {'cut_set_path': kwargs['voxconverse']['test_cut_set_path']}
 
-        data_modules_params['callhome_english'] = [train_data_dict, dev_data_dict, test_data_dict]
-        test(data_modules_params, 'callhome_english', kwargs)
-
-    if 'callhome_egyptian' in kwargs['dataset_names']:
-        data_modules_params = {}
-        train_data_dict = {'cut_set_path': kwargs['callhome_egyptian']['train_cut_set_path']}
-        dev_data_dict = {'cut_set_path': kwargs['callhome_egyptian']['dev_cut_set_path']}
-        test_data_dict = {'cut_set_path': kwargs['callhome_egyptian']['test_cut_set_path']}
-
-        data_modules_params['callhome_egyptian'] = [train_data_dict, dev_data_dict, test_data_dict]
-        test(data_modules_params, 'callhome_egyptian', kwargs)
+        data_modules_params['voxconverse'] = [train_data_dict, dev_data_dict, test_data_dict]
+        test(data_modules_params, 'voxconverse', kwargs)
 
     if 'chime6' in kwargs['dataset_names']:
         data_modules_params = {}
@@ -76,26 +69,63 @@ def test_data(**kwargs):
         data_modules_params['chime6'] = [train_data_dict, dev_data_dict, test_data_dict]
         test(data_modules_params, 'chime6', kwargs)
 
-    if 'tedlium' in kwargs['dataset_names']:
+    if 'dihard3' in kwargs['dataset_names']:
         data_modules_params = {}
-        train_data_dict = {'cut_set_path': kwargs['tedlium']['train_cut_set_path']}
-        dev_data_dict = {'cut_set_path': kwargs['tedlium']['dev_cut_set_path']}
-        test_data_dict = {'cut_set_path': kwargs['tedlium']['test_cut_set_path']}
+        dev_data_dict = {'cut_set_path': kwargs['dihard3']['dev_cut_set_path']}
+        test_data_dict = {'cut_set_path': kwargs['dihard3']['test_cut_set_path']}
 
-        data_modules_params['tedlium'] = [train_data_dict, dev_data_dict, test_data_dict]
-        test(data_modules_params, 'tedlium', kwargs)
+        data_modules_params['dihard3'] = [dev_data_dict, test_data_dict]
+        test(data_modules_params, 'dihard3', kwargs)
 
-    if 'voxconverse' in kwargs['dataset_names']:
+
+    if 'dipco' in kwargs['dataset_names']:
         data_modules_params = {}
-        train_data_dict = {'cut_set_path': kwargs['voxconverse']['train_cut_set_path']}
-        dev_data_dict = {'cut_set_path': kwargs['voxconverse']['dev_cut_set_path']}
-        test_data_dict = {'cut_set_path': kwargs['voxconverse']['test_cut_set_path']}
+        train_data_dict = {'cut_set_path': kwargs['dipco']['train_cut_set_path']}
+        dev_data_dict = {'cut_set_path': kwargs['dipco']['dev_cut_set_path']}
+        test_data_dict = {'cut_set_path': kwargs['dipco']['test_cut_set_path']}
 
-        data_modules_params['voxconverse'] = [train_data_dict, dev_data_dict, test_data_dict]
-        test(data_modules_params, 'voxconverse', kwargs)
+        data_modules_params['dipco'] = [train_data_dict, dev_data_dict, test_data_dict]
+        test(data_modules_params, 'dipco', kwargs)
+
+    # if 'voxceleb' in kwargs['dataset_names']:
+    #     data_modules_params = {}
+    #     train_data_dict = {'cut_set_path': kwargs['voxceleb']['train_cut_set_path']}
+    #     dev_data_dict = {'cut_set_path': kwargs['voxceleb']['dev_cut_set_path']}
+    #     test_data_dict = {'cut_set_path': kwargs['voxceleb']['test_cut_set_path']}
+
+    #     data_modules_params['voxceleb'] = [train_data_dict, dev_data_dict, test_data_dict]
+    #     test(data_modules_params, 'voxceleb', kwargs)
+
+    # if 'mgb2' in kwargs['dataset_names']:
+    #     data_modules_params = {}
+    #     train_data_dict = {'cut_set_path': kwargs['mgb2']['train_cut_set_path']}
+    #     dev_data_dict = {'cut_set_path': kwargs['mgb2']['dev_cut_set_path']}
+    #     test_data_dict = {'cut_set_path': kwargs['mgb2']['test_cut_set_path']}
+
+    #     data_modules_params['mgb2'] = [train_data_dict, dev_data_dict, test_data_dict]
+    #     test(data_modules_params, 'mgb2', kwargs)
+
+    if 'gale_arabic' in kwargs['dataset_names']:
+        data_modules_params = {}
+        train_data_dict = {'cut_set_path': kwargs['gale_arabic']['train_cut_set_path']}
+        dev_data_dict = {'cut_set_path': kwargs['gale_arabic']['dev_cut_set_path']}
+        test_data_dict = {'cut_set_path': kwargs['gale_arabic']['test_cut_set_path']}
+
+        data_modules_params['gale_arabic'] = [train_data_dict, dev_data_dict, test_data_dict]
+        test(data_modules_params, 'gale_arabic', kwargs)
+    
+    if 'gale_mandarin' in kwargs['dataset_names']:
+        data_modules_params = {}
+        train_data_dict = {'cut_set_path': kwargs['gale_mandarin']['train_cut_set_path']}
+        dev_data_dict = {'cut_set_path': kwargs['gale_mandarin']['dev_cut_set_path']}
+        test_data_dict = {'cut_set_path': kwargs['gale_mandarin']['test_cut_set_path']}
+
+        data_modules_params['gale_mandarin'] = [train_data_dict, dev_data_dict, test_data_dict]
+        test(data_modules_params, 'gale_mandarin', kwargs)
+
 
     # data_module = GlobalDataModule(data_modules_params, kwargs['max_duration'])
-    # data_module.prepare_data()
+    # data_module.setup()
     # dataloader = data_module.train_dataloader()
         
     # batch = next(iter(dataloader))

@@ -1,14 +1,26 @@
 import torch
 
-from src.scripts import train_vad, test_vad, predict_vad
-from data import prepare_data, test_data
+from src.scripts import *
+from data import *
 
 from config.config import load_config
 
 def main(config):
     
-    if config.task == 'prepare':
+    if config.task == 'wer':
+        calc_wer()
+
+    elif config.task == 'download':
+        download_data(**config)
+
+    elif config.task == 'prepare':
         prepare_data(**config)
+    
+    elif config.task == 'compute_feats':
+        prepare_feats(**config)
+    
+    elif config.task == 'cuts_subset':
+        prepare_cuts_subset(**config)
     
     elif config.task == 'test_data':
         test_data(**config)
@@ -20,12 +32,13 @@ def main(config):
             test_vad(**config)
         elif config.function == 'predict':
             predict_vad(**config)
-
+        elif config.function == 'predict_dihard3':
+            predict_dihard3_split(**config)
 
 
 if __name__ == '__main__':
 
-    print(torch.cuda.is_available())
+    print('GPU:', torch.cuda.is_available())
     
     # a = torch.ones(1).to("cuda")  # to avoid race condition, use cuda device at the start
     # print(a)

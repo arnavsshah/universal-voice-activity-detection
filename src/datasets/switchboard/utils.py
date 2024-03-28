@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Dict, Optional, Union
 
 import lhotse
-from lhotse import load_manifest_lazy, CutSet, S3PRLSSLConfig, S3PRLSSL
+from lhotse import load_manifest_lazy, CutSet, Fbank, FbankConfig, S3PRLSSLConfig, S3PRLSSL
 from lhotse.recipes import prepare_switchboard
 
 
@@ -44,17 +44,16 @@ def create_switchboard_dataset(
         absolute_paths=True,
     )
 
-
-# 1555 batches, 120 samples per batch, 5 seconds per sample
-# 186505 samples in total
-# 259.1666666666667 hours in total
-
 def create_switchboard_cut(
     output_dir: Optional[Pathlike] = None,
     feats_dir: Optional[Pathlike] = None,
     batch_duration: int = 600,
+    phase: Optional[str] = 'train',
+    feature_extractor: Optional[str] = 'wav2vec2',
     **kwargs
 ) -> lhotse.CutSet:
+
+    assert phase in ['train', 'dev'], f'phase must be either "train" or "dev". Currently, it is {phase}'
 
     output_dir = Path(output_dir) if output_dir else Path('/export/c01/ashah108/vad/data/switchboard/manifests')
     feats_dir = Path(feats_dir) if feats_dir else Path('/export/c01/ashah108/vad/data/switchboard/feats')
@@ -65,56 +64,53 @@ def create_switchboard_cut(
     if not os.path.exists(feats_dir):
         feats_dir.mkdir(parents=True, exist_ok=True)
 
-    base_filename = 'swbd'
+    # rec = load_manifest_lazy(f'{output_dir}/swbd_recordings_all.jsonl.gz')
+    # sup = load_manifest_lazy(f'{output_dir}/swbd_supervisions_all.jsonl.gz')
+    base_filename = f'{phase}'
 
-    rec = load_manifest_lazy(f'{output_dir}/swbd_recordings_all.jsonl.gz')
-    sup = load_manifest_lazy(f'{output_dir}/swbd_supervisions_all.jsonl.gz')
-
-    cuts = CutSet.from_manifests(
-        recordings=rec,
-        supervisions=sup
-    )
+    # cuts = CutSet.from_manifests(
+    #     recordings=rec,
+    #     supervisions=sup
+    # )
     
-    multi_cuts = cuts.multi_cuts
-    mono_cuts = []
-    for id, multi_cut in multi_cuts.items():
-        mono_cuts.append(multi_cut.to_mono(mono_downmix=False)[0])
+    # multi_cuts = cuts.multi_cuts
+    # mono_cuts = []
+    # for id, multi_cut in multi_cuts.items():
+    #     mono_cuts.append(multi_cut.to_mono(mono_downmix=False)[0])
         
-    cuts = CutSet.from_cuts(mono_cuts).resample(16000).cut_into_windows(duration=5).filter(lambda cut: cut.duration > 3)
+    # cuts = CutSet.from_cuts(mono_cuts).resample(16000)
+    
+    # cuts.to_file(f'{output_dir}/all_cuts_og.jsonl.gz')
 
-    cuts.to_file(f'{output_dir}/{base_filename}_cuts_ssl.jsonl.gz')
+    # cuts_trim = cuts.trim_to_supervisions(keep_overlapping=False, keep_all_channels=False)
+    # cuts_trim.to_file(f'{output_dir}/all_cuts_trim.jsonl.gz')
 
-    # extractor = Fbank(FbankConfig(
-    #     sampling_rate=8000,
-    #     device='cuda'
-    # ))
+    # cuts = cuts.cut_into_windows(duration=5).filter(lambda cut: cut.duration > 3)
 
-    extractor = S3PRLSSL(S3PRLSSLConfig(device='cuda', ssl_model='wav2vec2'))
+    # cuts.to_file(f'{output_dir}/all_cuts_window.jsonl.gz')
+
+    cuts = load_manifest_lazy(f'{output_dir}/all_cuts_window.jsonl.gz')
+
+    # similar to icefall recipe
+    if phase == 'train':
+        cuts = cuts.subset(last=186105)
+    elif phase == 'dev':
+        cuts = cuts.subset(first=400)
+
+    if feature_extractor == 'fbank':
+        extractor = Fbank(FbankConfig(sampling_rate=16000, device='cuda'))
+    else:
+        extractor = S3PRLSSL(S3PRLSSLConfig(device='cuda', ssl_model=feature_extractor))
 
     cuts = cuts.compute_and_store_features_batch(
         extractor=extractor,
-        storage_path=f'{feats_dir}/{base_filename}_feats_ssl',
+        storage_path=f'{feats_dir}/{base_filename}_{feature_extractor}',
         batch_duration=batch_duration,
         num_workers=4,
         overwrite=True
     ).pad(duration=5.0)
 
-    cuts.to_file(f'{output_dir}/{base_filename}_all_cuts_feats_ssl.jsonl.gz')
+    cuts.to_file(f'{output_dir}/{base_filename}_cuts_{feature_extractor}.jsonl.gz')
 
-    # cuts = CutSet.from_file(f'{output_dir}/{base_filename}_cuts_feats.jsonl.gz')
-    ids = []
-    for cut in cuts:
-        ids.append(cut.id)
-
-    num_samples = len(ids)
-
-    train_cuts = cuts.subset(cut_ids=ids[:int(0.7 * num_samples)])
-    dev_cuts = cuts.subset(cut_ids=ids[int(0.7 * num_samples):int(0.85 * num_samples)])
-    test_cuts = cuts.subset(cut_ids=ids[int(0.85 * num_samples):])
-    
-    train_cuts.to_file(f'{output_dir}/{base_filename}_train_cuts_feats_ssl.jsonl.gz')
-    dev_cuts.to_file(f'{output_dir}/{base_filename}_dev_cuts_feats_ssl.jsonl.gz')
-    test_cuts.to_file(f'{output_dir}/{base_filename}_test_cuts_feats_ssl.jsonl.gz')
-
-    return train_cuts, dev_cuts, test_cuts
+    return cuts
 
