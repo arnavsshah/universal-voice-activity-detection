@@ -1,9 +1,11 @@
+*.sh
+*.slurm
+
 data/*
 !data/*.py
 
 experiments
-
-lhotse-test
+force_align
 
 lightning_logs
 logs
@@ -11,7 +13,6 @@ wandb
 
 swb_ms98_transcriptions
 switchboard_word_alignments.tar.gz
-voxceleb_trials.txt
 
 
 # Byte-compiled / optimized / DLL files

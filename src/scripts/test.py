@@ -70,11 +70,28 @@ def test_vad(**kwargs):
                     )
 
     for dataset_name in kwargs['test_dataset_names']:
-
+        
         data_modules_params = prepare_data_module_params([dataset_name], kwargs)
         data_module = GlobalDataModule(data_modules_params, kwargs['max_duration'])
         
         trainer.test(model, data_module)
+
+        # if dataset_name == 'dihard3':
+
+        #     domains = ['audiobooks', 'broadcast_interview', 'clinical', 'court', 'cts', 'maptask', 'meeting', 'restaurant', 'socio_field', 'socio_lab', 'webvideo']
+        #     for domain in domains:
+        #         kwargs['dihard3']['test_cut_set_path'] = f'/export/c01/ashah108/vad/data/dihard3/manifests/domains/dev_cuts_feats_ssl_{domain}.jsonl.gz'
+                
+        #         data_modules_params = prepare_data_module_params([dataset_name], kwargs)
+        #         data_module = GlobalDataModule(data_modules_params, kwargs['max_duration'])
+            
+        #         trainer.test(model, data_module)
+        # else:
+        #     data_modules_params = prepare_data_module_params([dataset_name], kwargs)
+        #     data_module = GlobalDataModule(data_modules_params, kwargs['max_duration'])
+        
+        #     trainer.test(model, data_module)
+
 
 
 

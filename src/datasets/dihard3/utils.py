@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Dict, Optional, Union
 
 import lhotse
-from lhotse import load_manifest_lazy, CutSet, S3PRLSSLConfig, S3PRLSSL
+from lhotse import load_manifest_lazy, CutSet, Fbank, FbankConfig, S3PRLSSLConfig, S3PRLSSL
 from lhotse.recipes import prepare_dihard3
 
 
@@ -42,6 +42,7 @@ def create_dihard3_cut(
     feats_dir: Optional[Pathlike] = None,
     batch_duration: int = 600,
     phase: Optional[str] = 'dev',
+    feature_extractor: Optional[str] = 'wav2vec2',
     **kwargs
 ) -> lhotse.CutSet:
 
@@ -61,26 +62,73 @@ def create_dihard3_cut(
     cuts = CutSet.from_manifests(
         recordings=rec,
         supervisions=sup
-    ).cut_into_windows(duration=5).filter(lambda cut: cut.duration > 3)
+    )
+    
+    cuts.to_file(f'{output_dir}/{base_filename}_cuts_og.jsonl.gz')
 
-    cuts.to_file(f'{output_dir}/{base_filename}_cuts_ssl.jsonl.gz')
+    cuts_trim = cuts.trim_to_supervisions(keep_overlapping=False, keep_all_channels=False)
+    cuts_trim.to_file(f'{output_dir}/{base_filename}_cuts_trim.jsonl.gz')
 
-    # extractor = Fbank(FbankConfig(device='cuda'))
+    cuts = cuts.cut_into_windows(duration=5).filter(lambda cut: cut.duration > 3)
 
-    # cuts = CutSet.from_file(f'{output_dir}/{base_filename}_cuts.jsonl.gz')
-    extractor = S3PRLSSL(S3PRLSSLConfig(device='cuda', ssl_model='wav2vec2'))
+    cuts.to_file(f'{output_dir}/{base_filename}_cuts_window.jsonl.gz')
 
+    cuts = cuts.subset(first=len(cuts.to_eager()))  # progress bar doesn't appear otherwise
+    
+    if feature_extractor == 'fbank':
+        extractor = Fbank(FbankConfig(sampling_rate=16000, device='cuda'))
+    else:
+        extractor = S3PRLSSL(S3PRLSSLConfig(device='cuda', ssl_model=feature_extractor))
+    
     cuts = cuts.compute_and_store_features_batch(
         extractor=extractor,
-        storage_path=f'{feats_dir}/{base_filename}_feats_ssl',
+        storage_path=f'{feats_dir}/{base_filename}_{feature_extractor}',
         batch_duration=batch_duration,
         num_workers=4,
         overwrite=True
     ).pad(duration=5.0)
 
 
-    cuts.to_file(f'{output_dir}/{base_filename}_cuts_feats_ssl.jsonl.gz')
+    cuts.to_file(f'{output_dir}/{base_filename}_cuts_{feature_extractor}.jsonl.gz')
     # cuts.describe()
+
+    create_dihard3_domain_split(output_dir=output_dir, phase=phase, feature_extractor=feature_extractor)
 
     return cuts
 
+
+
+def create_dihard3_domain_split(
+    output_dir: Optional[Pathlike] = None,
+    phase: Optional[str] = 'dev',
+    feature_extractor: Optional[str] = 'wav2vec2',
+) -> lhotse.CutSet:
+    
+
+    domains = ['audiobooks', 'broadcast_interview', 'clinical', 'court', 'cts', 'maptask', 'meeting', 'restaurant', 'socio_field', 'socio_lab', 'webvideo']
+    new_cuts = {domain: [] for domain in domains}
+
+    domains_dir = Path(f'{output_dir}/domains')
+
+    if not os.path.exists(domains_dir):
+        domains_dir.mkdir(parents=True, exist_ok=True)
+
+    sup = load_manifest_lazy(f'{output_dir}/dihard3_supervisions_{phase}.jsonl.gz')
+    
+    base_filename = f'{phase}'
+    cuts = load_manifest_lazy(f'{output_dir}/{base_filename}_cuts_{feature_extractor}.jsonl.gz')
+    
+    recording_domain = {}
+    for sup_item in sup:
+        recording_domain[sup_item.recording_id] = sup_item.custom['domain']
+
+    for cut in cuts:
+        if type(cut) is lhotse.cut.mixed.MixedCut:
+            temp_domain = recording_domain[cut.tracks[0].cut.recording.id]
+        else:
+            temp_domain = recording_domain[cut.recording.id]
+        new_cuts[temp_domain].append(cut)
+
+    for domain in domains:
+        new_cut = CutSet.from_cuts(new_cuts[domain])
+        new_cut.to_file(f'{domains_dir}/{base_filename}_cuts_{feature_extractor}_{domain}.jsonl.gz')
