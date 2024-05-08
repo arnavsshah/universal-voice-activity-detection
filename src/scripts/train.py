@@ -5,6 +5,7 @@ import torch
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.loggers import WandbLogger
+from pytorch_lightning.accelerators import find_usable_cuda_devices
 
 from src.engines.vad_engine import VadModel
 from src.datasets.data_module import GlobalDataModule
@@ -16,7 +17,7 @@ from config.config import *
 def train_vad(**kwargs):
     """
     Train the VAD model
-    
+
     Parameters
     ----------
      **kwargs : dict
@@ -28,8 +29,8 @@ def train_vad(**kwargs):
         - 'supported_datasets' (list): A list of supported dataset names.
         - 'seed' (int): seed to ensure reproducibility
         - 'experiments_dir' (str): Directory path for storing experiment-related files and model checkpoints.
-        - 'dataset_names' - (list) list of datasets to be used. Each dataset has as separate dictionary of model-specific configuration. 
-            Some of them are listed below. Others might have dataset-specific paramteres 
+        - 'dataset_names' - (list) list of datasets to be used. Each dataset has as separate dictionary of model-specific configuration.
+            Some of them are listed below. Others might have dataset-specific paramteres
             - 'train_cut_set_path' (str): Path to the training cut set file.
             - 'dev_cut_set_path' (str): Path to the development cut set file.
             - 'test_cut_set_path' (str): Path to the test cut set file.
@@ -45,62 +46,65 @@ def train_vad(**kwargs):
 
     # torch.set_printoptions(profile="full")
 
-    assert kwargs['model_name'] in kwargs['supported_models'], f"Invalid model {kwargs['model_name']}. Model should be one of {kwargs['supported_models']}"
+    assert (
+        kwargs["model_name"] in kwargs["supported_models"]
+    ), f"Invalid model {kwargs['model_name']}. Model should be one of {kwargs['supported_models']}"
 
-    for dataset_name in kwargs['dataset_names']:
-        assert dataset_name in kwargs['supported_datasets'], f"Invalid dataset {dataset_name}. Dataset should be one of {kwargs['supported_datasets']}"
+    for dataset_name in kwargs["dataset_names"]:
+        assert (
+            dataset_name in kwargs["supported_datasets"]
+        ), f"Invalid dataset {dataset_name}. Dataset should be one of {kwargs['supported_datasets']}"
 
-    pl.seed_everything(kwargs['seed'], workers=True)
+    pl.seed_everything(kwargs["seed"], workers=True)
 
-    data_modules_params = prepare_data_module_params(kwargs['dataset_names'], kwargs)
-    data_module = GlobalDataModule(data_modules_params,
-                                    kwargs['max_duration'],
-                                    weights_dict=kwargs['dataset_weights'],
-                                    stop_early=kwargs['stop_early'],
-                                    enable_musan=kwargs['enable_musan'],
-                                    musan_cut_set_path=kwargs['musan']['cut_set_path'],)
+    data_modules_params = prepare_data_module_params(kwargs["dataset_names"], kwargs)
+    data_module = GlobalDataModule(
+        data_modules_params,
+        kwargs["max_duration"],
+        weights_dict=kwargs["dataset_weights"],
+        stop_early=kwargs["stop_early"],
+        custom_vad=kwargs["feature_extractor"] == "sincnet",
+    )
     data_module.prepare_data()
-    
-    if not os.path.exists(kwargs['experiments_dir']):
-        Path(kwargs['experiments_dir']).mkdir(parents=True, exist_ok=True)
+
+    if not os.path.exists(kwargs["experiments_dir"]):
+        Path(kwargs["experiments_dir"]).mkdir(parents=True, exist_ok=True)
 
     checkpoint_callback = ModelCheckpoint(
-        every_n_epochs=3,
+        every_n_epochs=kwargs["check_val_every_n_epoch"],
         save_top_k=-1,
-        dirpath=kwargs['experiments_dir'],
+        dirpath=kwargs["experiments_dir"],
         filename="checkpoint-{epoch:02d}",
     )
 
-    if kwargs['load_checkpoint']:
-        model = VadModel.load_from_checkpoint(checkpoint_path=kwargs['checkpoint_path'])
+    if kwargs["load_checkpoint"]:
+        model = VadModel.load_from_checkpoint(checkpoint_path=kwargs["checkpoint_path"])
     else:
         model = VadModel(
-            kwargs['model_name'], 
-            kwargs['model_dict'],
-            learning_rate=kwargs['learning_rate'],
+            kwargs["model_name"],
+            kwargs["model_dict"],
+            learning_rate=kwargs["learning_rate"],
         )
 
-    if kwargs['is_wandb']:
+    if kwargs["is_wandb"]:
         logger = WandbLogger(
-            project=kwargs['wandb']['project'],
-            name=kwargs['wandb']['name'],
-            log_model=False
+            project=kwargs["wandb"]["project"],
+            name=kwargs["wandb"]["name"],
+            log_model=False,
         )
     else:
         logger = None
 
-    trainer = pl.Trainer(accelerator=kwargs['device'], 
-                        max_epochs=kwargs['max_epochs'], 
-                        devices=kwargs['num_devices'],
-                        default_root_dir=kwargs['experiments_dir'],
-                        logger=logger,
-                        callbacks=[checkpoint_callback],
-                        check_val_every_n_epoch=kwargs['check_val_every_n_epoch'],
-                        deterministic=True,
-                        use_distributed_sampler=not kwargs['distributed_training'],
-                    )
+    trainer = pl.Trainer(
+        accelerator=kwargs["device"],
+        max_epochs=kwargs["max_epochs"],
+        devices=find_usable_cuda_devices(kwargs["num_devices"]),
+        default_root_dir=kwargs["experiments_dir"],
+        logger=logger,
+        callbacks=[checkpoint_callback],
+        check_val_every_n_epoch=kwargs["check_val_every_n_epoch"],
+        deterministic=True,
+        use_distributed_sampler=not kwargs["distributed_training"],
+    )
 
     trainer.fit(model, data_module)
-
-
-

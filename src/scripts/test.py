@@ -16,7 +16,7 @@ from config.config import *
 def test_vad(**kwargs):
     """
     Test the VAD model
-    
+
     Parameters
     ----------
      **kwargs : dict
@@ -28,8 +28,8 @@ def test_vad(**kwargs):
         - 'supported_datasets' (list): A list of supported dataset names.
         - 'seed' (int): seed to ensure reproducibility
         - 'experiments_dir' (str): Directory path for storing experiment-related files and model checkpoints.
-        - 'test_dataset_names' - (list) list of datasets to be used for testing (individually). 
-            Each dataset has as separate dictionary of model-specific configuration. 
+        - 'test_dataset_names' - (list) list of datasets to be used for testing (individually).
+            Each dataset has as separate dictionary of model-specific configuration.
             Some of them are listed below. Others might have dataset-specific paramteres
             - 'train_cut_set_path' (str): Path to the training cut set file.
             - 'dev_cut_set_path' (str): Path to the development cut set file.
@@ -46,34 +46,43 @@ def test_vad(**kwargs):
 
     # torch.set_printoptions(profile="full")
 
-    assert kwargs['model_name'] in kwargs['supported_models'], f"Invalid model {kwargs['model_name']}. Model should be one of {kwargs['supported_models']}"
+    assert (
+        kwargs["model_name"] in kwargs["supported_models"]
+    ), f"Invalid model {kwargs['model_name']}. Model should be one of {kwargs['supported_models']}"
 
-    for dataset_name in kwargs['test_dataset_names']:
-        assert dataset_name in kwargs['supported_datasets'], f"Invalid dataset {dataset_name}. Dataset should be one of {kwargs['supported_datasets']}"
+    for dataset_name in kwargs["test_dataset_names"]:
+        assert (
+            dataset_name in kwargs["supported_datasets"]
+        ), f"Invalid dataset {dataset_name}. Dataset should be one of {kwargs['supported_datasets']}"
 
-    assert kwargs['load_checkpoint'], "Please provide a checkpoint path to load from"
+    assert kwargs["load_checkpoint"], "Please provide a checkpoint path to load from"
 
-    pl.seed_everything(kwargs['seed'], workers=True)
+    pl.seed_everything(kwargs["seed"], workers=True)
 
-    if not os.path.exists(kwargs['experiments_dir']):
-        Path(kwargs['experiments_dir']).mkdir(parents=True, exist_ok=True)
+    if not os.path.exists(kwargs["experiments_dir"]):
+        Path(kwargs["experiments_dir"]).mkdir(parents=True, exist_ok=True)
 
     logger = None
 
-    model = VadModel.load_from_checkpoint(checkpoint_path=kwargs['checkpoint_path'])
+    model = VadModel.load_from_checkpoint(checkpoint_path=kwargs["checkpoint_path"])
 
-    trainer = pl.Trainer(accelerator=kwargs['device'],
-                        devices=1,
-                        default_root_dir=kwargs['experiments_dir'],
-                        logger=logger,
-                        deterministic=True,
-                    )
+    trainer = pl.Trainer(
+        accelerator=kwargs["device"],
+        devices=1,
+        default_root_dir=kwargs["experiments_dir"],
+        logger=logger,
+        deterministic=True,
+    )
 
-    for dataset_name in kwargs['test_dataset_names']:
-        
+    for dataset_name in kwargs["test_dataset_names"]:
+
         data_modules_params = prepare_data_module_params([dataset_name], kwargs)
-        data_module = GlobalDataModule(data_modules_params, kwargs['max_duration'])
-        
+        data_module = GlobalDataModule(
+            data_modules_params,
+            kwargs["max_duration"],
+            custom_vad=kwargs["feature_extractor"] == "sincnet",
+        )
+
         trainer.test(model, data_module)
 
         # if dataset_name == 'dihard3':
@@ -81,17 +90,13 @@ def test_vad(**kwargs):
         #     domains = ['audiobooks', 'broadcast_interview', 'clinical', 'court', 'cts', 'maptask', 'meeting', 'restaurant', 'socio_field', 'socio_lab', 'webvideo']
         #     for domain in domains:
         #         kwargs['dihard3']['test_cut_set_path'] = f'/export/c01/ashah108/vad/data/dihard3/manifests/domains/dev_cuts_feats_ssl_{domain}.jsonl.gz'
-                
+
         #         data_modules_params = prepare_data_module_params([dataset_name], kwargs)
         #         data_module = GlobalDataModule(data_modules_params, kwargs['max_duration'])
-            
+
         #         trainer.test(model, data_module)
         # else:
         #     data_modules_params = prepare_data_module_params([dataset_name], kwargs)
         #     data_module = GlobalDataModule(data_modules_params, kwargs['max_duration'])
-        
+
         #     trainer.test(model, data_module)
-
-
-
-

@@ -79,10 +79,12 @@ class SincNet(nn.Module):
 
         Returns
         -------
-        outputs : (batch, frame, classes)
+        outputs : (batch, feature, frames)
         """
 
-        assert waveforms.shape[1] == 1, f'Only single channel is supported. You have {waveforms.shape[1]}'
+        assert (
+            waveforms.shape[1] == 1
+        ), f"Only single channel is supported. You have {waveforms.shape[1]}"
 
         outputs = self.wav_norm1d(waveforms)
 

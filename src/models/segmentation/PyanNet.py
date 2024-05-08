@@ -21,6 +21,8 @@
 # SOFTWARE.
 
 
+from typing import Optional
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -29,7 +31,7 @@ import pytorch_lightning as pl
 
 from einops import rearrange
 
-# from src.models.blocks.sincnet import SincNet
+from src.models.blocks.sincnet import SincNet
 from src.utils.helper import pairwise, merge_dict
 
 
@@ -44,6 +46,9 @@ class PyanNet(pl.LightningModule):
         Audio sample rate. Defaults to 16kHz (16000).
     num_channels : int, optional
         Number of channels. Defaults to mono (1).
+    sincnet : dict, optional
+        Keyword arugments passed to the SincNet block.
+        Defaults to {"stride": 1}.
     lstm : dict, optional
         Keyword arguments passed to the LSTM layer.
         Defaults to {"hidden_size": 128, "num_layers": 2, "bidirectional": True},
@@ -56,7 +61,7 @@ class PyanNet(pl.LightningModule):
         i.e. two linear layers with 128 units each.
     """
 
-    # SINCNET_DEFAULTS = {"stride": 10}
+    SINCNET_DEFAULTS = {"stride": 10}
     LSTM_DEFAULTS = {
         "hidden_size": 128,
         "num_layers": 4,
@@ -68,26 +73,29 @@ class PyanNet(pl.LightningModule):
 
     def __init__(
         self,
-        lstm: dict = None,
-        linear: dict = None,
-        encoding_dim: int = 768,
+        sincnet: Optional[dict] = None,
+        lstm: Optional[dict] = None,
+        linear: Optional[dict] = None,
+        encoding_dim: int = 60,
         sample_rate: int = 16000,
         num_channels: int = 1,
     ):
         super(PyanNet, self).__init__()
 
-        # sincnet = merge_dict(self.SINCNET_DEFAULTS, sincnet)
-        # sincnet["sample_rate"] = sample_rate
+        sincnet = merge_dict(self.SINCNET_DEFAULTS, sincnet)
+        sincnet["sample_rate"] = sample_rate
 
         lstm = merge_dict(self.LSTM_DEFAULTS, lstm)
         lstm["batch_first"] = True
 
         linear = merge_dict(self.LINEAR_DEFAULTS, linear)
 
-        self.save_hyperparameters("lstm", "linear")
+        self.save_hyperparameters("sincnet", "lstm", "linear")
 
-        # self.sincnet = SincNet(**self.hparams.sincnet)
+        self.sincnet = SincNet(**self.hparams.sincnet)
+
         self.encoding_dim = encoding_dim
+
         monolithic = lstm["monolithic"]
         if monolithic:
             multi_layer_lstm = dict(lstm)
@@ -107,9 +115,12 @@ class PyanNet(pl.LightningModule):
             self.lstm = nn.ModuleList(
                 [
                     nn.LSTM(
-                        encoding_dim
-                        if i == 0
-                        else lstm["hidden_size"] * (2 if lstm["bidirectional"] else 1),
+                        (
+                            encoding_dim
+                            if i == 0
+                            else lstm["hidden_size"]
+                            * (2 if lstm["bidirectional"] else 1)
+                        ),
                         **one_layer_lstm
                     )
                     for i in range(num_layers)
@@ -148,28 +159,32 @@ class PyanNet(pl.LightningModule):
         self.classifier = nn.Linear(in_features, out_features)
         self.activation = nn.Sigmoid()
 
-    def forward(self, audio_feats: torch.Tensor) -> torch.Tensor:
+    def forward(self, waveforms: torch.Tensor) -> torch.Tensor:
         """Pass forward
 
         Parameters
         ----------
-        audio_feats : (batch, frames, features)
+        waveforms : (batch, channel, samples)
 
         Returns
         -------
         scores : (batch, frames, classes)
         """
 
-        # outputs = self.sincnet(waveforms)  # (B, feature, frames)
-        outputs = audio_feats
+        outputs = self.sincnet(waveforms)  # (B, feature, frames)
+
+        outputs = rearrange(outputs, "batch feature frames -> batch frames feature")
 
         if self.hparams.lstm["monolithic"]:
-            outputs, _ = self.lstm(outputs)  # (B, frames, hidden_size) or (B, frames, 2 * hidden_size)
+            outputs, _ = self.lstm(
+                outputs
+            )  # (B, frames, hidden_size) or (B, frames, 2 * hidden_size)
 
         else:
-            # outputs = rearrange(outputs, "batch feature frames -> batch frames feature")
             for i, lstm in enumerate(self.lstm):
-                outputs, _ = lstm(outputs)  # (B, frames, hidden_size) or (B, frames, 2 * hidden_size)
+                outputs, _ = lstm(
+                    outputs
+                )  # (B, frames, hidden_size) or (B, frames, 2 * hidden_size)
                 if i + 1 < self.hparams.lstm["num_layers"]:
                     outputs = self.dropout(outputs)
 
