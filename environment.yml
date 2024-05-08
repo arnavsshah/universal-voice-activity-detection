@@ -7,12 +7,12 @@ channels:
 dependencies:
   - python==3.8.10
   - conda-forge::sox==14.4.2
-  - nvidia::cudatoolkit=10.2
-  - pytorch::pytorch==1.12.1
-  - pytorch::torchaudio==0.12.1
+  - nvidia::cudatoolkit=12.1
+  - pytorch::pytorch==2.2.0
+  - pytorch::torchaudio==2.2.0
   - pip
-  - pip:
-      - -r requirements.txt
+  # - pip:
+  #     - -r requirements.txt
 
 
 # conda create --name vad python=3.8.10
