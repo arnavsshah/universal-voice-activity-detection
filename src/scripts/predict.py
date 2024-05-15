@@ -85,6 +85,7 @@ def predict_vad(**kwargs):
         default_root_dir=kwargs["experiments_dir"],
         logger=logger,
         deterministic=True,
+        enable_progress_bar=False,
     )
 
     for dataset_name in kwargs["predict_dataset_names"]:

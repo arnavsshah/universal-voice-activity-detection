@@ -84,6 +84,7 @@ def predict_dihard3_split(**kwargs):
         default_root_dir=kwargs["experiments_dir"],
         logger=logger,
         deterministic=True,
+        enable_progress_bar=False,
     )
 
     dataset_name = "dihard3"
