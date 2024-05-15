@@ -14,7 +14,7 @@ def load_config():
     cfg.distributed_training = False
 
     cfg.feature_extractor = (
-        "wav2vec2"  # [sincnet, fbank, wav2vec2, hubert_base_robust_mgr]
+        "fbank"  # [fbank, wav2vec2, hubert_base_robust_mgr, sincnet]
     )
     feature_extractor_to_append_filename = (
         "window" if cfg.feature_extractor == "sincnet" else cfg.feature_extractor
@@ -22,8 +22,8 @@ def load_config():
     cfg.frame_shift = 0.01 if cfg.feature_extractor == "fbank" else 0.02
 
     # models
-    cfg.supported_models = ["PyanNet", "PyanNet2"]
-    cfg.model_name = "PyanNet" if cfg.feature_extractor == "sincnet" else "PyanNet2"
+    cfg.supported_models = ["PyanNet"]
+    cfg.model_name = "PyanSincNet" if cfg.feature_extractor == "sincnet" else "PyanNet"
 
     # pyannet
     cfg.model_dict = ml_collections.ConfigDict()
@@ -41,9 +41,9 @@ def load_config():
     cfg.batch_size = 80
 
     # checkpointing
-    cfg.experiments_dir = "/export/c01/ashah108/vad/experiments/all-50-wav2vec2-no-musan-weighted-stop-early-false"
-    cfg.load_checkpoint = False
-    cfg.checkpoint_path = "/export/c01/ashah108/vad/experiments/all-50-wav2vec2-no-musan-weighted-stop-early-false/checkpoint-epoch=11.ckpt"
+    cfg.experiments_dir = "/export/c01/ashah108/vad/experiments/all-50-fbank-musan-weighted-stop-early-false"
+    cfg.load_checkpoint = True
+    cfg.checkpoint_path = "/export/c01/ashah108/vad/experiments/all-50-fbank-musan-weighted-stop-early-false/checkpoint-epoch=11.ckpt"
 
     # logging
     cfg.is_wandb = False
@@ -52,7 +52,7 @@ def load_config():
     cfg.wandb = ml_collections.ConfigDict()
 
     cfg.wandb.project = "universal-vad"
-    cfg.wandb.name = "all-50-wav2vec2-no-musan-weighted-stop-early-false"
+    cfg.wandb.name = "all-50-fbank-musan-weighted-stop-early-false"
 
     # datasets
     cfg.supported_datasets = [
@@ -68,12 +68,7 @@ def load_config():
         "gale_arabic",
         "gale_mandarin",
         "santa_barbara",
-        "aishell",
-        "babel",
         "callhome_english",
-        "fisher_english",
-        "gigaspeech",
-        "mgb2",
     ]
     cfg.prepare_dataset = False
     cfg.get_cuts = False
@@ -106,7 +101,7 @@ def load_config():
         "callhome_english",
     ]
 
-    # cfg.dataset_weights = {'ami': 70, 'tedlium': 540, 'switchboard': 387, 'voxconverse': 20, 'chime6': 40, 'dihard3': 34, 'dipco': 3, 'gale_arabic': 960, 'gale_mandarin': 821}
+    # cfg.dataset_weights = {'ami': 70, 'tedlium': 540, 'switchboard': 387, 'voxconverse': 20, 'chime6': 40, 'dihard3': 34, 'dipco': 3, 'gale_arabic': 960, 'gale_mandarin': 821, 'callhome_english': 38}
     cfg.dataset_weights = {
         "ami": 50,
         "tedlium": 50,
@@ -117,8 +112,7 @@ def load_config():
         "dipco": 3,
         "gale_arabic": 50,
         "gale_mandarin": 50,
-        "callhome_english": 50,
-        "gigaspeech": 50,
+        "callhome_english": 38,
     }
     # cfg.dataset_weights = None
 
@@ -135,24 +129,23 @@ def load_config():
         "dipco",
         "santa_barbara",
         "callhome_english",
-        "gigaspeech",
     ]
 
-    # cfg.predict_dataset_names = ["dipco"]
-    cfg.predict_dataset_names = [
-        "tedlium",
-        "chime6",
-        "voxconverse",
-        "ami",
-        "switchboard",
-        "gale_arabic",
-        "gale_mandarin",
-        "dihard3",
-        "dipco",
-        "santa_barbara",
-        "callhome_english",
-        "gigaspeech",
-    ]
+    cfg.predict_dataset_names = ["dipco"]
+    # cfg.predict_dataset_names = [
+    #     "tedlium",
+    #     "chime6",
+    #     "voxconverse",
+    #     "ami",
+    #     "switchboard",
+    #     "gale_arabic",
+    #     "gale_mandarin",
+    #     "dihard3",
+    #     "dipco",
+    #     "santa_barbara",
+    #     "callhome_english",
+    #     "gigaspeech",
+    # ]
 
     cfg.predict_output_dir = "/export/c01/ashah108/vad/data/predictions"
 

@@ -78,7 +78,10 @@ def train_vad(**kwargs):
     )
 
     if kwargs["load_checkpoint"]:
-        model = VadModel.load_from_checkpoint(checkpoint_path=kwargs["checkpoint_path"])
+        model = VadModel.load_from_checkpoint(
+            checkpoint_path=kwargs["checkpoint_path"],
+            model_dict=kwargs["model_dict"],
+        )
     else:
         model = VadModel(
             kwargs["model_name"],
@@ -104,7 +107,9 @@ def train_vad(**kwargs):
         callbacks=[checkpoint_callback],
         check_val_every_n_epoch=kwargs["check_val_every_n_epoch"],
         deterministic=True,
-        use_distributed_sampler=not kwargs["distributed_training"],
+        use_distributed_sampler=not kwargs[
+            "distributed_training"
+        ],  # lhotse handles this
     )
 
     trainer.fit(model, data_module)

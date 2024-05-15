@@ -74,7 +74,10 @@ def predict_vad(**kwargs):
     logger = None
     frame_shift = kwargs["frame_shift"]
 
-    model = VadModel.load_from_checkpoint(checkpoint_path=kwargs["checkpoint_path"])
+    model = VadModel.load_from_checkpoint(
+        checkpoint_path=kwargs["checkpoint_path"],
+        model_dict=kwargs["model_dict"],
+    )
 
     trainer = pl.Trainer(
         accelerator=kwargs["device"],

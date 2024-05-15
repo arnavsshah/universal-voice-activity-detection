@@ -10,7 +10,7 @@ from torchmetrics.classification import (
     BinaryStatScores,
 )
 
-from src.models import PyanNet, PyanNet2
+from src.models import PyanNet
 from src.utils.loss import binary_cross_entropy
 from src.utils.helper import median_filter
 
@@ -29,16 +29,14 @@ class VadModel(pl.LightningModule):
 
     def __init__(
         self,
-        model_name: str = "PyanNet2",
+        model_name: str = "PyanNet",
         model_dict: dict = {},
         learning_rate: float = 1e-3,
     ):
         super(VadModel, self).__init__()
 
         self.model_name = model_name
-        self.model = (
-            PyanNet(**model_dict) if model_name == "PyanNet" else PyanNet2(**model_dict)
-        )
+        self.model = PyanNet(**model_dict)
         self.model.build()
 
         self.learning_rate = learning_rate
@@ -263,9 +261,9 @@ class VadModel(pl.LightningModule):
 
         # forward pass
         if self.model_name == "PyanNet":
-            y_pred = self.model(batch["inputs"].unsqueeze(1))
-        elif self.model_name == "PyanNet2":
             y_pred = self.model(batch["inputs"])
+        elif self.model_name == "PyanSincNet":
+            y_pred = self.model(batch["inputs"].unsqueeze(1))
 
         y = batch["is_voice"]
 

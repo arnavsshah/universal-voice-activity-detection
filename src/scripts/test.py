@@ -64,7 +64,10 @@ def test_vad(**kwargs):
 
     logger = None
 
-    model = VadModel.load_from_checkpoint(checkpoint_path=kwargs["checkpoint_path"])
+    model = VadModel.load_from_checkpoint(
+        checkpoint_path=kwargs["checkpoint_path"],
+        model_dict=kwargs["model_dict"],
+    )
 
     trainer = pl.Trainer(
         accelerator=kwargs["device"],
